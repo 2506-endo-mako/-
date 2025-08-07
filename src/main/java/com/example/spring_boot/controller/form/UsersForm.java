@@ -1,24 +1,34 @@
 package com.example.spring_boot.controller.form;
+
 import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+
 @Getter
 @Setter
-
-public class CommentsForm {
+public class UsersForm {
     @Column
     private int id;
 
     @Column
-    private String text;
+    private String account;
 
-    @Column(name = "user_id")
-    private int userId;
+    @Column
+    private String password;
 
-    @Column(name = "message_id")
-    private int messageId;
+    @Column
+    private String name;
+
+    @Column(name = "branch_id")
+    private int branchId;
+
+    @Column(name = "department_id")
+    private int departmentId;
+
+    @Column(name = "is_stopped")
+    private int isStopped;
 
     @Column(name = "created_date")
     private Date createdDate;

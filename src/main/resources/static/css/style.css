@@ -1,0 +1,70 @@
+body {
+	background-color: #FFFFBB;
+}
+
+.header-contents {
+	margin-left: 20px;
+}
+
+.main-contents {
+	margin: 20px;
+	padding: 10px 10px 5px 10px;
+	background-color: #FFA500;
+	height: 100%;
+	width: 80%;
+}
+
+.footer-contents {
+	margin-left: 20px;
+}
+
+.content-box {
+    margin: 5px 0px;
+	width: 780px;
+	height: 56px;
+}
+
+button {
+	margin-bottom: 5px;
+}
+
+.delete-button{
+    display:inline-block;
+}
+
+.edit-button{
+    display:inline-block;
+}
+
+.form-area {
+	margin: 10px;
+	padding: 10px;
+	background-color: white;
+}
+
+.tasks{
+    background-color: white;
+}
+
+label {
+	display: block;
+}
+
+.errorMessages {
+	margin-top: 10px;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	margin-left: 10px;
+	color: red;
+}
+
+.limit-before{
+    background-color: #FFBEDA;
+}
+.limit-after{
+    background-color: #FFFF99;
+}
+
+.td, th {
+ padding: 10px 10px 10px 10px;
+ }

@@ -22,39 +22,39 @@ public class LoginController {
     @Autowired
     HttpSession session;
 
-/*
- * ログイン画面
- */
-@GetMapping("/login")
-public ModelAndView newContent() {
-    ModelAndView mav = new ModelAndView();
-    UserForm userForm = new UserForm();
-    mav.setViewName("/login");
-    mav.addObject("formModel", userForm);
-    mav.addObject("errorMessages", session.getAttribute("errorMessages"));
-    session.invalidate();
-    return mav;
-}
-
-/*
- * ログイン処理
- */
-@PostMapping("/login")
-public ModelAndView updateContent(@Validated @ModelAttribute("formModel") UserForm user, BindingResult result) {
-    //バリデーション
-    if (result.hasErrors()) {
-        List<String> errorMessages = new ArrayList<>();
-        for (ObjectError error : result.getAllErrors()) {
-            // ここでメッセージを取得する。
-            errorMessages.add(error.getDefaultMessage());
-        }
-        session.setAttribute("errorMessages", errorMessages);
-        return new ModelAndView("redirect:/login");
+    /*
+     * ログイン画面
+     */
+    @GetMapping("/login")
+    public ModelAndView newContent() {
+        ModelAndView mav = new ModelAndView();
+        UserForm userForm = new UserForm();
+        mav.setViewName("/login");
+        mav.addObject("formModel", userForm);
+        mav.addObject("errorMessages", session.getAttribute("errorMessages"));
+        session.invalidate();
+        return mav;
     }
 
-    String account = UserForm.getAccount();
-    String password = UserForm.getPassword();
-    User users= userService.findByAccountAndPassword(account, password);
-    return new ModelAndView("redirect:/");
-}
+    /*
+     * ログイン処理
+     */
+    @PostMapping("/login")
+    public ModelAndView updateContent(@Validated @ModelAttribute("formModel") UserForm user, BindingResult result) {
+        //バリデーション
+        if (result.hasErrors()) {
+            List<String> errorMessages = new ArrayList<>();
+            for (ObjectError error : result.getAllErrors()) {
+                // ここでメッセージを取得する。
+                errorMessages.add(error.getDefaultMessage());
+            }
+            session.setAttribute("errorMessages", errorMessages);
+            return new ModelAndView("redirect:/login");
+        }
+
+        String account = UserForm.getAccount();
+        String password = UserForm.getPassword();
+        User users = userService.findByAccountAndPassword(account, password);
+        return new ModelAndView("redirect:/");
+    }
 }
