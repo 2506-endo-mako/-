@@ -5,11 +5,13 @@ import com.example.spring_boot.repository.UserRepository;
 import com.example.spring_boot.repository.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class UserService {
     @Autowired
     UserRepository userRepository;
@@ -17,10 +19,8 @@ public class UserService {
     /*
      * ログイン情報を1件取得
      */
-    public User selectUser(String account, String password) {
-        // パスワード暗号化
-        //String encPassword = CipherUtil.encrypt(password);
-        List<User> users = userRepository.findByAccountAndPassword(account, password);
+    public User selectUser(String account, String encPassword) {
+        List<User> users = userRepository.findByAccountAndPassword(account, encPassword);
         if (users.isEmpty()) {
             return null;
         }
