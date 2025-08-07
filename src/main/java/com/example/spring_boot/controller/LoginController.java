@@ -40,7 +40,7 @@ public class LoginController {
      * ログイン処理
      */
     @PostMapping("/login")
-    public ModelAndView updateContent(@Validated @ModelAttribute("formModel") UserForm user, BindingResult result) {
+    public ModelAndView updateContent(@Validated @ModelAttribute("formModel") UserForm userForm, BindingResult result) {
         //バリデーション
         if (result.hasErrors()) {
             List<String> errorMessages = new ArrayList<>();
@@ -52,9 +52,10 @@ public class LoginController {
             return new ModelAndView("redirect:/login");
         }
 
-        String account = UserForm.getAccount();
-        String password = UserForm.getPassword();
-        User users = userService.findByAccountAndPassword(account, password);
+        String account = userForm.getAccount();
+        String password = userForm.getPassword();
+        User user = userService.selectUser(account, password);
+        session.setAttribute("loginUser", user);
         return new ModelAndView("redirect:/");
     }
 }

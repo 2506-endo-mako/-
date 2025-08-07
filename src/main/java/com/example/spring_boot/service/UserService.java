@@ -15,27 +15,47 @@ public class UserService {
     UserRepository userRepository;
 
     /*
-     * レコード1件取得処理
+     * ログイン情報を1件取得
      */
-    public List<UserForm> loginUser() {
-        List<User> results = userRepository.findByAccountAndPassword(String account, String password);
-        List<UserForm> users = setUserForm(results);
+    public User selectUser(String account, String password) {
+        // パスワード暗号化
+        //String encPassword = CipherUtil.encrypt(password);
+        List<User> users = userRepository.findByAccountAndPassword(account, password);
+        if (users.isEmpty()) {
+            return null;
+        }
+        return users.get(0);
+    }
+
+    /*
+     * レコード全件取得処理
+     */
+    public List<UserForm> findAllUser() {
+        List<User> results = userRepository.findAll();
+        List<UserForm> users = setAllUser(results);
         return users;
     }
+
     /*
      * DBから取得したデータをFormに設定
      */
-    private List<UserForm> setUserForm(List<User> results) {
+    private List<UserForm> setAllUser(List<User> results) {
         List<UserForm> users = new ArrayList<>();
-
         for (int i = 0; i < results.size(); i++) {
-            UserForm user = new UserForm();
+            UserForm userForm = new UserForm();
             User result = results.get(i);
-            user.setId(result.getId());
-            user.setContent(result.getContent());
-            users.add(user);
+            userForm.setId(result.getId());
+            userForm.setAccount(result.getAccount());
+            userForm.setName(result.getName());
+            userForm.setBranchId(result.getBranchId());
+            userForm.setDepartmentId(result.getDepartmentId());
+            userForm.setBranchId(result.getBranchId());
+            userForm.setDepartmentId(result.getDepartmentId());
+            userForm.setIsStopped(result.getIsStopped());
+            users.add(userForm);
         }
         return users;
     }
 }
+
 
