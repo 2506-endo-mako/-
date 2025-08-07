@@ -2,6 +2,8 @@ package com.example.spring_boot.controller;
 
 import com.example.spring_boot.controller.form.CommentForm;
 import com.example.spring_boot.controller.form.MessageForm;
+import com.example.spring_boot.repository.CommentRepository;
+import com.example.spring_boot.repository.MessageRepository;
 import com.example.spring_boot.repository.entity.Message;
 import com.example.spring_boot.service.CommentService;
 import com.example.spring_boot.service.MessageService;
@@ -19,6 +21,8 @@ public class TopController {
     MessageService messageService;
     @Autowired
     CommentService commentService;
+    @Autowired
+    MessageRepository messageRepository;
 
 
     /*
@@ -52,26 +56,24 @@ public class TopController {
             mav.addObject("formModel", new CommentForm());
             return mav;
     }
-
-    @RequestMapping("/search")
-    public ModelAndView searchCode(
-            ModelAndView mv,
-            @RequestParam(value = "category", defaultValue = "") String category) {
-        List<Message> messages = new ArrayList<>();
-        // 検索
-        // 名前が空欄の場合は実行しない
-        if (!messages.equals("")) {
-            messages = messageRepository.findByNameLike("%" + category + "%");
-        }
-
-        // 検索した名前がヒット
-        if(!users.isEmpty()){
-            mv.addObject("users", users);
-        }
-
-        mv.setViewName("users");
-        return mv;
-    }
+//
+//    @RequestMapping("/search")
+//    public ModelAndView searchCode(
+//            ModelAndView mv,
+//            @RequestParam(value = "category", defaultValue = "") String category) {
+//        List<Message> messages = new ArrayList<>();
+//        // 検索
+//        // 名前が空欄の場合は実行しない
+//        if (!messages.equals("")) {
+////            messages = messageRepository.findByNameLike("%" + category + "%");
+//        }
+//        // 検索した名前がヒット
+//        if(!messages.isEmpty()){
+//            mv.addObject("messages", messages);
+//        }
+//        mv.setViewName("messages");
+//        return mv;
+//    }
 
 
     /*

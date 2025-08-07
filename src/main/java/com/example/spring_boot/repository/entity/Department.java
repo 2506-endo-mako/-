@@ -1,4 +1,6 @@
 package com.example.spring_boot.repository.entity;
+
+import jakarta.persistence.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -7,22 +9,26 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+
 @Entity
-@Table(name = "Departments")
+@Table(name = "departments")
 @Getter
 @Setter
 
 public class Department {
+
     @Id
     @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column
+    @Column(name = "name")
     private String name;
 
-    @Column
-    private Date created_date;
+    @Column(name = "created_date", insertable = false, updatable = false)
+    private Date createdDate;
 
-    @Column
-    private Date updated_date;
+    @Column(name = "updated_date", insertable = false, updatable = true)
+    private Date updatedDate;
+
 }

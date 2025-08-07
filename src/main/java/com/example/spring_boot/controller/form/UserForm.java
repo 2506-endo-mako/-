@@ -1,39 +1,40 @@
 package com.example.spring_boot.controller.form;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
-
 @Getter
 @Setter
 public class UserForm {
-    @Column
+
     private int id;
 
     @Column
+    @NotBlank(message = "アカウントを入力してください")
     private String account;
 
-    @Column
+    @NotBlank(message = "パスワードを入力してください")
     private String password;
 
-    @Column
     private String name;
 
-    @Column(name = "branch_id")
-    private int branchId;
-
-    @Column(name = "department_id")
-    private int departmentId;
-
-    @Column(name = "is_stopped")
-    private int isStopped;
-
     @Column(name = "created_date")
+    private Integer branchId;
+
+    private Integer departmentId;
+
+    private Integer isStopped;
+
+    @Column(name = "created_date", insertable = false, updatable = false)
     private Date createdDate;
 
-    @Column(name = "updated_date")
+    @Column(name = "updated_date", insertable = false, updatable = true)
     private Date updatedDate;
 
 }

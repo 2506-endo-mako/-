@@ -1,5 +1,6 @@
 package com.example.spring_boot.repository.entity;
 
+import jakarta.persistence.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,31 +12,33 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+
 @Entity
 @Table(name = "messages")
 @Getter
 @Setter
 public class Message {
+
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column
+    @Column(name = "title")
     private String title;
 
-    @Column
+    @Column(name = "text")
     private String text;
 
-    @Column
+    @Column(name = "category")
     private String category;
 
     @Column(name = "user_id")
     private int userId;
 
-    @Column(name = "created_date")
+    @Column(name = "created_date", insertable = false, updatable = false)
     private Date createdDate;
 
-    @Column(name = "updated_date")
+    @Column(name = "updated_date", insertable = false, updatable = true)
     private Date updatedDate;
 }
