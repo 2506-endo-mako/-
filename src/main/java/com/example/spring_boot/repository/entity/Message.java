@@ -33,8 +33,8 @@ public class Message {
     @Column(name = "category")
     private String category;
 
-    @Column(name = "userId")
-    private Integer userId;
+    @Column(name = "user_id")
+    private int userId;
 
     @Column(name = "created_date", insertable = false, updatable = false)
     private Date createdDate;

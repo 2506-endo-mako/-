@@ -7,18 +7,12 @@ import java.util.Date;
 @Getter
 @Setter
 
-public class CommentsForm {
+public class BranchForm {
     @Column
     private int id;
 
     @Column
-    private String text;
-
-    @Column(name = "user_id")
-    private int userId;
-
-    @Column(name = "message_id")
-    private int messageId;
+    private String name;
 
     @Column(name = "created_date")
     private Date createdDate;

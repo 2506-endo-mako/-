@@ -9,13 +9,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
-
 @Getter
 @Setter
 public class UserForm {
 
     private int id;
 
+    @Column
     @NotBlank(message = "アカウントを入力してください")
     private String account;
 
@@ -24,6 +24,7 @@ public class UserForm {
 
     private String name;
 
+    @Column(name = "created_date")
     private Integer branchId;
 
     private Integer departmentId;
