@@ -18,6 +18,7 @@ public class MessageService {
     @Autowired
     MessageRepository messageRepository;
 
+
     /*
      * レコード全件取得処理
      */
@@ -50,10 +51,11 @@ public class MessageService {
 
         List<Message> results = null;
 
-        if(StringUtils.isEmpty(category)){
+        if(category.equals("%null%")){
             results = messageRepository.findByCreatedDateBetweenOrderByCreatedDateAsc(start,end);
         } else {
-            results = messageRepository.findByCreatedDateBetweenAndCategoryOrderByCreatedDateAsc(start,end,category);
+            //メソッドを変える完全一致　部分一致に変える
+            results = messageRepository.findByCreatedDateBetweenAndCategoryLikeOrderByCreatedDateAsc(start,end,category);
         }
 
         List<MessageForm> Messages = setMessagesForm(results);

@@ -36,7 +36,7 @@ public class TopController {
 
             ModelAndView mav = new ModelAndView();
             // タスクを全件取得
-            List<MessageForm> contentData = messageService.findAllMessages(startDate,endDate,category);
+            List<MessageForm> contentData = messageService.findAllMessages(startDate,endDate,"%" + category + "%");
             // 画面遷移先を指定
             mav.setViewName("/top");
             // 投稿データオブジェクトを保管
@@ -56,25 +56,6 @@ public class TopController {
             mav.addObject("formModel", new CommentForm());
             return mav;
     }
-//
-//    @RequestMapping("/search")
-//    public ModelAndView searchCode(
-//            ModelAndView mv,
-//            @RequestParam(value = "category", defaultValue = "") String category) {
-//        List<Message> messages = new ArrayList<>();
-//        // 検索
-//        // 名前が空欄の場合は実行しない
-//        if (!messages.equals("")) {
-////            messages = messageRepository.findByNameLike("%" + category + "%");
-//        }
-//        // 検索した名前がヒット
-//        if(!messages.isEmpty()){
-//            mv.addObject("messages", messages);
-//        }
-//        mv.setViewName("messages");
-//        return mv;
-//    }
-
 
     /*
      * 新規投稿画面表示
