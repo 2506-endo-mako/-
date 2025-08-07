@@ -30,8 +30,8 @@ public class Message {
     @Column
     private String category;
 
-    @Column
-    private int user_id;
+    @Column(name = "user_id")
+    private int userId;
 
     @Column(name = "created_date")
     private Date createdDate;

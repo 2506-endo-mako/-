@@ -5,6 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 @Entity
@@ -19,15 +20,16 @@ public class Comment {
     @Column
     private String text;
 
-    @Column
-    private int user_id;
+    @Column(name = "user_id")
+    private int userId;
 
-    @Column
-    private int message_id;
+    @Column(name = "message_id")
+    private int messageId;
 
-    @Column
-    private Date created_date;
+    @Column(name = "created_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date createdDate;
 
-    @Column
-    private Date updated_date;
+    @Column(name = "updated_date")
+    private Date updatedDate;
 }
