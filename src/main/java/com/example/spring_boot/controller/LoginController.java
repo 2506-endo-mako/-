@@ -3,6 +3,7 @@ package com.example.spring_boot.controller;
 import com.example.spring_boot.controller.form.UserForm;
 import com.example.spring_boot.repository.entity.User;
 import com.example.spring_boot.service.UserService;
+import com.example.spring_boot.util.PasswordHashEncode;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -54,7 +55,8 @@ public class LoginController {
 
         String account = userForm.getAccount();
         String password = userForm.getPassword();
-        User user = userService.selectUser(account, password);
+        String encPassword = PasswordHashEncode.encode(password);
+        User user = userService.selectUser(account, encPassword);
         session.setAttribute("loginUser", user);
         return new ModelAndView("redirect:/");
     }
