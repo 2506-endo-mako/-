@@ -7,11 +7,16 @@ import com.example.spring_boot.repository.MessageRepository;
 import com.example.spring_boot.repository.entity.Message;
 import com.example.spring_boot.service.CommentService;
 import com.example.spring_boot.service.MessageService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +27,7 @@ public class TopController {
     @Autowired
     CommentService commentService;
     @Autowired
-    MessageRepository messageRepository;
+    HttpSession session;
 
 
     /*
@@ -34,47 +39,28 @@ public class TopController {
                             @RequestParam(name = "end_date", required = false) String endDate,
                             @RequestParam(name = "category", required = false) String category) {
 
-            ModelAndView mav = new ModelAndView();
-            // タスクを全件取得
-            List<MessageForm> contentData = messageService.findAllMessages(startDate,endDate,category);
-            // 画面遷移先を指定
-            mav.setViewName("/top");
-            // 投稿データオブジェクトを保管
-            mav.addObject("contentData", contentData);
-            mav.addObject("startDate", startDate);
-            mav.addObject("endDate", endDate);
-            mav.addObject("category", category);
+        ModelAndView mav = new ModelAndView();
+        // タスクを全件取得
+        List<MessageForm> contentData = messageService.findAllMessages(startDate, endDate, category);
+        // 画面遷移先を指定
+        mav.setViewName("/top");
+        // 投稿データオブジェクトを保管
+        mav.addObject("contentData", contentData);
+        mav.addObject("startDate", startDate);
+        mav.addObject("endDate", endDate);
+        mav.addObject("category", category);
 
-            //コメント内容表示処理
-            // 投稿を全件取得
-            List<CommentForm> commentData = commentService.findAllComment();
-            // 画面遷移先を指定
-            mav.setViewName("/top");
-            // コメント返信オブジェクトを保管
-            mav.addObject("commentData", commentData);
-            //コメント返信用に空のcommentFormを準備
-            mav.addObject("formModel", new CommentForm());
-            return mav;
+        //コメント内容表示処理
+        // 投稿を全件取得
+        List<CommentForm> commentData = commentService.findAllComment();
+        // 画面遷移先を指定
+        mav.setViewName("/top");
+        // コメント返信オブジェクトを保管
+        mav.addObject("commentData", commentData);
+        //コメント返信用に空のcommentFormを準備
+        mav.addObject("formModel", new CommentForm());
+        return mav;
     }
-//
-//    @RequestMapping("/search")
-//    public ModelAndView searchCode(
-//            ModelAndView mv,
-//            @RequestParam(value = "category", defaultValue = "") String category) {
-//        List<Message> messages = new ArrayList<>();
-//        // 検索
-//        // 名前が空欄の場合は実行しない
-//        if (!messages.equals("")) {
-////            messages = messageRepository.findByNameLike("%" + category + "%");
-//        }
-//        // 検索した名前がヒット
-//        if(!messages.isEmpty()){
-//            mv.addObject("messages", messages);
-//        }
-//        mv.setViewName("messages");
-//        return mv;
-//    }
-
 
     /*
      * 新規投稿画面表示
@@ -88,6 +74,8 @@ public class TopController {
         mav.setViewName("/new");
         // 準備した空のFormを保管
         mav.addObject("formModel", messagesForm);
+        mav.addObject("errorMessages", session.getAttribute("errorMessages"));
+        session.invalidate();
         return mav;
     }
 
@@ -95,7 +83,17 @@ public class TopController {
      * 新規投稿処理
      */
     @PostMapping("/add")
-    public ModelAndView addContent(@ModelAttribute("formModel") MessageForm messagesForm){
+    public ModelAndView addContent(@Validated @ModelAttribute("formModel") MessageForm messagesForm, BindingResult result) throws ParseException {
+        //バリデーション
+        if (result.hasErrors()) {
+            List<String> errorMessages = new ArrayList<>();
+            for (ObjectError error : result.getAllErrors()) {
+                // ここでメッセージを取得する。
+                errorMessages.add(error.getDefaultMessage());
+            }
+            session.setAttribute("errorMessages", errorMessages);
+            return new ModelAndView("redirect:/new");
+        }
         // 投稿をテーブルに格納
         messageService.saveMessages(messagesForm);
         // rootへリダイレクト

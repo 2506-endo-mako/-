@@ -41,7 +41,7 @@ public class LoginController {
      * ログイン処理
      */
     @PostMapping("/login")
-    public ModelAndView updateContent(@Validated @ModelAttribute("formModel") UserForm userForm, BindingResult result) {
+    public ModelAndView login(@Validated @ModelAttribute("formModel") UserForm userForm, BindingResult result) {
         //バリデーション
         if (result.hasErrors()) {
             List<String> errorMessages = new ArrayList<>();
@@ -55,9 +55,20 @@ public class LoginController {
 
         String account = userForm.getAccount();
         String password = userForm.getPassword();
+        //パスワード暗号化
         String encPassword = PasswordHashEncode.encode(password);
         User user = userService.selectUser(account, encPassword);
         session.setAttribute("loginUser", user);
         return new ModelAndView("redirect:/");
+    }
+
+    /*
+     * ログアウト処理
+     */
+    @GetMapping("/logout")
+    public ModelAndView logout() {
+        // セッションの破棄
+        session.invalidate();
+        return new ModelAndView("redirect:/login");
     }
 }

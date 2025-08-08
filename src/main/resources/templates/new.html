@@ -9,11 +9,19 @@
 <div class="header-contents">
     <h2>新規投稿</h2>
 </div>
+<!--エラーメッセージ -->
+<div class="errorMessages" th:each="errorMessage : ${errorMessages}">
+    <li><span th:text="${errorMessage}"/></li>
+</div>
 <div class="main-contents">
     <form method="post" action="/add" th:object="${formModel}">
         <div class="form-area">
-            <label>投稿内容</label>
-            <textarea class="tweet-box" th:field="*{content}" size="20" maxlength="200" /></textarea><br/>
+            <label>件名</label>
+            <textarea class="title" th:field="*{title}" size="20" maxlength="100" /></textarea>
+            <label>本文</label>
+            <textarea class="text-box" th:field="*{text}" size="20" maxlength="1100" /></textarea>
+            <label>カテゴリ</label>
+            <textarea class="category" th:field="*{category}" size="20" maxlength="100" /></textarea><br/>
             <input type="submit" value="投稿" />
         </div>
     </form>
