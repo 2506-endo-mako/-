@@ -97,5 +97,16 @@ public class TopController {
         // rootへリダイレクト
         return new ModelAndView("redirect:/");
     }
-    
+
+    /*
+     * 投稿削除処理
+     */
+    @DeleteMapping("/delete/{id}")
+    public ModelAndView deleteContent(@PathVariable Integer id) {
+        // 投稿をテーブルに格納
+        messageService.deleteMessages(id);
+        // rootへリダイレクト
+        return new ModelAndView("redirect:/");
+    }
+
 }

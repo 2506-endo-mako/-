@@ -47,7 +47,14 @@
         <div class="category">
           カテゴリー : <span th:text="${contentData.category}"/>
         </div>
-
+        <!--削除ボタン-->
+        <div class="delete-button">
+          <form th:action="@{/delete/{id}(id=${contentData.id})}" th:method="delete">
+            <div>
+              <input class="confirm-action-btn" type="submit" value="削除">
+            </div>
+          </form>
+        </div>
       <!--コメント返信表示処理-->
       <div class="message-icon" th:each="commentData : ${commentData}">
 

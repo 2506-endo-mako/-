@@ -106,6 +106,12 @@ public class MessageService {
         return messages;
     }
 
-
+    /*
+     *投稿の削除
+     */
+    public void deleteMessages(Integer id) {
+        //idを指定してdelete文を実行したい
+        messageRepository.deleteById(id);
+    }
 }
 
