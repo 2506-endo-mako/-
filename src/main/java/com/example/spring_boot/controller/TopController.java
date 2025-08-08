@@ -2,16 +2,18 @@ package com.example.spring_boot.controller;
 
 import com.example.spring_boot.controller.form.CommentForm;
 import com.example.spring_boot.controller.form.MessageForm;
-import com.example.spring_boot.repository.CommentRepository;
 import com.example.spring_boot.repository.MessageRepository;
-import com.example.spring_boot.repository.entity.Message;
 import com.example.spring_boot.service.CommentService;
 import com.example.spring_boot.service.MessageService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -76,6 +78,8 @@ public class TopController {
         mav.setViewName("/new");
         // 準備した空のFormを保管
         mav.addObject("formModel", messagesForm);
+        mav.addObject("errorMessages", session.getAttribute("errorMessages"));
+        session.invalidate();
         return mav;
     }
 
@@ -83,7 +87,17 @@ public class TopController {
      * 新規投稿処理
      */
     @PostMapping("/add")
-    public ModelAndView addContent(@ModelAttribute("formModel") MessageForm messagesForm){
+    public ModelAndView addContent(@Validated @ModelAttribute("formModel") MessageForm messagesForm, BindingResult result) throws ParseException {
+        //バリデーション
+        if (result.hasErrors()) {
+            List<String> errorMessages = new ArrayList<>();
+            for (ObjectError error : result.getAllErrors()) {
+                // ここでメッセージを取得する。
+                errorMessages.add(error.getDefaultMessage());
+            }
+            session.setAttribute("errorMessages", errorMessages);
+            return new ModelAndView("redirect:/new");
+        }
         // 投稿をテーブルに格納
         messageService.saveMessages(messagesForm);
         // rootへリダイレクト

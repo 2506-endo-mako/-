@@ -97,7 +97,12 @@ public class MessageService {
     private Message setMessagesEntity(MessageForm reqMessages) {
         Message messages = new Message();
         messages.setId(reqMessages.getId());
-//        messages.setContent(reqMessages.getContent());
+        messages.setTitle(reqMessages.getTitle());
+        messages.setText(reqMessages.getText());
+        messages.setCategory(reqMessages.getCategory());
+        messages.setUserId(reqMessages.getUserId());
+        messages.setCreatedDate(reqMessages.getCreatedDate());
+        messages.setUpdatedDate(reqMessages.getUpdatedDate());
         return messages;
     }
 
