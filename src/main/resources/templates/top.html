@@ -75,40 +75,36 @@
           </div>
           <div class="delete-button">
             <form th:action="@{/commentDelete/{id}(id=${commentData.id})}" th:method="delete">
-              <input type="submit" value="削除">
+              <input class=confirm-action-btn type="submit" value="削除">
             </form>
           </div>
         </div>
-        <br/>
-      </div>
+      </div><br/>
     </div>
   </div>
+    <script>
+      //★削除ボタンへのダイアログ機能
+      // 'confirm-action-btn' クラスを持つすべての要素を取得
+      const confirmButtons = document.querySelectorAll('.confirm-action-btn');
 
+      //取得した各ボタンに対してループ処理を行う
+      confirmButtons.forEach(button => {
+          button.addEventListener("click", function(event) {
+              // data-message 属性から確認メッセージを取得
+              const message = this.dataset.message || "削除してもよろしいですか？"; // デフォルトメッセージも設定
 
-
-<!--    <script>-->
-<!--      //★削除ボタンへのダイアログ機能-->
-<!--      // 'confirm-action-btn' クラスを持つすべての要素を取得-->
-<!--      const confirmButtons = document.querySelectorAll('.confirm-action-btn');-->
-
-<!--      //取得した各ボタンに対してループ処理を行う-->
-<!--      confirmButtons.forEach(button => {-->
-<!--          button.addEventListener("click", function(event) {-->
-<!--              // data-message 属性から確認メッセージを取得-->
-<!--              const message = this.dataset.message || "削除してもよろしいですか？"; // デフォルトメッセージも設定-->
-
-<!--              var result = window.confirm(message);-->
-<!--                  if( result ) {-->
-<!--                      alert("OKがクリックされました");-->
-<!--                  // もしフォーム送信やリンク遷移を続行させたい場合は、ここで event.preventDefault() を書かない-->
-<!--                  // または、alert("OKがクリックされました"); 以外の処理を行う-->
-<!--                  } else {-->
-<!--                      event.preventDefault(); // デフォルトの動作をキャンセル-->
-<!--                      alert("キャンセルがクリックされました");-->
-<!--                  }-->
-<!--          });-->
-<!--      });-->
-<!--    </script>-->
+              var result = window.confirm(message);
+                  if( result ) {
+                      alert("OKがクリックされました");
+                  // もしフォーム送信やリンク遷移を続行させたい場合は、ここで event.preventDefault() を書かない
+                  // または、alert("OKがクリックされました"); 以外の処理を行う
+                  } else {
+                      event.preventDefault(); // デフォルトの動作をキャンセル
+                      alert("キャンセルがクリックされました");
+                  }
+          });
+      });
+    </script>
   </div>
 </body>
 </html>
