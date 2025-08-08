@@ -2,13 +2,12 @@ package com.example.spring_boot.controller;
 
 import com.example.spring_boot.controller.form.CommentForm;
 import com.example.spring_boot.controller.form.MessageForm;
-import com.example.spring_boot.repository.CommentRepository;
 import com.example.spring_boot.repository.MessageRepository;
-import com.example.spring_boot.repository.entity.Message;
 import com.example.spring_boot.service.CommentService;
 import com.example.spring_boot.service.MessageService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -16,7 +15,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,16 +37,16 @@ public class TopController {
                             @RequestParam(name = "end_date", required = false) String endDate,
                             @RequestParam(name = "category", required = false) String category) {
 
-        ModelAndView mav = new ModelAndView();
-        // タスクを全件取得
-        List<MessageForm> contentData = messageService.findAllMessages(startDate, endDate, category);
-        // 画面遷移先を指定
-        mav.setViewName("/top");
-        // 投稿データオブジェクトを保管
-        mav.addObject("contentData", contentData);
-        mav.addObject("startDate", startDate);
-        mav.addObject("endDate", endDate);
-        mav.addObject("category", category);
+            ModelAndView mav = new ModelAndView();
+            // タスクを全件取得
+            List<MessageForm> contentData = messageService.findAllMessages(startDate,endDate,"%" + category + "%");
+            // 画面遷移先を指定
+            mav.setViewName("/top");
+            // 投稿データオブジェクトを保管
+            mav.addObject("contentData", contentData);
+            mav.addObject("startDate", startDate);
+            mav.addObject("endDate", endDate);
+            mav.addObject("category", category);
 
         //コメント内容表示処理
         // 投稿を全件取得
@@ -99,6 +97,5 @@ public class TopController {
         // rootへリダイレクト
         return new ModelAndView("redirect:/");
     }
-
-
+    
 }
