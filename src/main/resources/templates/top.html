@@ -55,6 +55,22 @@
             </div>
           </form>
         </div>
+
+        <!--コメント返信投稿-->
+        <form method="post" action="/commentAdd" th:object="${formModel}">
+          <div class="form-area">
+            <div class="errorMessages" >
+              <div th:if="${MessageId == contentData.id}">
+                <span th:text="${errorMessages}"/>
+              </div>
+            </div>
+            <!--textはEntityへと通じてる-->
+            <textarea class="comment-box" th:field="*{text}" size="20" maxlength="600"/></textarea><br/>
+            <input type="hidden" name="messageId" th:value="${contentData.id}" />
+            <input type="submit" value="返信" />
+          </div>
+        </form>
+
       <!--コメント返信表示処理-->
       <div class="message-icon" th:each="commentData : ${commentData}">
 
@@ -65,67 +81,38 @@
           <div class="text">
             作成日時 : <span th:text="${commentData.createdDate}"/>
           </div>
-          <br />
-      </div>
-      </div>
+          <div class="delete-button">
+            <form th:action="@{/commentDelete/{id}(id=${commentData.id})}" th:method="delete">
+              <input class=confirm-action-btn type="submit" value="削除">
+            </form>
+          </div>
+        </div>
+      </div><br/>
     </div>
   </div>
+    <script>
+      //★削除ボタンへのダイアログ機能
+      // 'confirm-action-btn' クラスを持つすべての要素を取得
+      const confirmButtons = document.querySelectorAll('.confirm-action-btn');
 
+      //取得した各ボタンに対してループ処理を行う
+      confirmButtons.forEach(button => {
+          button.addEventListener("click", function(event) {
+              // data-message 属性から確認メッセージを取得
+              const message = this.dataset.message || "削除してもよろしいですか？"; // デフォルトメッセージも設定
 
-
-<!--      <div class="createdDate">-->
-<!--        投稿日時 : <span th:text="${contentData.createdDate}"/>-->
-<!--      </div>-->
-<!--      <div class="userId">-->
-<!--        投稿者 : <span th:text="${contentData.userId}"/>-->
-<!--      </div>-->
-<!--      <div class="comment">-->
-<!--        コメント : <span th:text="${contentData.comment}"/>-->
-<!--      </div>-->
-
-
-
-
-<!--    &lt;!&ndash;編集ボタン&ndash;&gt;-->
-<!--    <td class="edit-button">-->
-<!--      <form th:action="@{/edit/{id}(id=${content.id})}">-->
-<!--        <input type="submit" value="編集"/>-->
-<!--      </form>-->
-<!--    </td>-->
-<!--    &lt;!&ndash;削除ボタン&ndash;&gt;-->
-<!--    <td class="delete-button">-->
-<!--      <form th:action="@{/delete/{id}(id=${content.id})}" th:method="delete">-->
-<!--        <div>-->
-<!--          <input class="confirm-action-btn" type="submit" value="削除">-->
-<!--        </div>-->
-<!--      </form>-->
-<!--    </td>-->
-<!--  </tr>-->
-<!--  </table>-->
-<!--  <div>-->
-<!--    <script>-->
-<!--      //★削除ボタンへのダイアログ機能-->
-<!--      // 'confirm-action-btn' クラスを持つすべての要素を取得-->
-<!--      const confirmButtons = document.querySelectorAll('.confirm-action-btn');-->
-
-<!--      //取得した各ボタンに対してループ処理を行う-->
-<!--      confirmButtons.forEach(button => {-->
-<!--          button.addEventListener("click", function(event) {-->
-<!--              // data-message 属性から確認メッセージを取得-->
-<!--              const message = this.dataset.message || "削除してもよろしいですか？"; // デフォルトメッセージも設定-->
-
-<!--              var result = window.confirm(message);-->
-<!--                  if( result ) {-->
-<!--                      alert("OKがクリックされました");-->
-<!--                  // もしフォーム送信やリンク遷移を続行させたい場合は、ここで event.preventDefault() を書かない-->
-<!--                  // または、alert("OKがクリックされました"); 以外の処理を行う-->
-<!--                  } else {-->
-<!--                      event.preventDefault(); // デフォルトの動作をキャンセル-->
-<!--                      alert("キャンセルがクリックされました");-->
-<!--                  }-->
-<!--          });-->
-<!--      });-->
-<!--    </script>-->
+              var result = window.confirm(message);
+                  if( result ) {
+                      alert("OKがクリックされました");
+                  // もしフォーム送信やリンク遷移を続行させたい場合は、ここで event.preventDefault() を書かない
+                  // または、alert("OKがクリックされました"); 以外の処理を行う
+                  } else {
+                      event.preventDefault(); // デフォルトの動作をキャンセル
+                      alert("キャンセルがクリックされました");
+                  }
+          });
+      });
+    </script>
   </div>
 </body>
 </html>

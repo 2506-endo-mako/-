@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -48,16 +51,19 @@ public class TopController {
             mav.addObject("endDate", endDate);
             mav.addObject("category", category);
 
-        //コメント内容表示処理
-        // 投稿を全件取得
-        List<CommentForm> commentData = commentService.findAllComment();
-        // 画面遷移先を指定
-        mav.setViewName("/top");
-        // コメント返信オブジェクトを保管
-        mav.addObject("commentData", commentData);
-        //コメント返信用に空のcommentFormを準備
-        mav.addObject("formModel", new CommentForm());
-        return mav;
+            //コメント内容表示処理
+            // 投稿を全件取得
+            List<CommentForm> commentData = commentService.findAllComment();
+            // 画面遷移先を指定
+            mav.setViewName("/top");
+            // コメント返信オブジェクトを保管
+            mav.addObject("commentData", commentData);
+            mav.addObject("MessageId",session.getAttribute("MessageId"));
+            mav.addObject("errorMessages", session.getAttribute("commentErrorMessage"));
+            //コメント返信用に空のcommentFormを準備
+            mav.addObject("formModel", new CommentForm());
+            session.invalidate();
+            return mav;
     }
 
     /*
@@ -97,6 +103,44 @@ public class TopController {
         // rootへリダイレクト
         return new ModelAndView("redirect:/");
     }
+
+    /*
+     * コメント返信投稿処理
+     */
+    //
+    @PostMapping("/commentAdd")
+    public ModelAndView addComment(@Validated @ModelAttribute("formModel") CommentForm commentForm,
+                                   BindingResult result) {
+        if (result.hasErrors()) {
+            for (FieldError error : result.getFieldErrors()) {
+                String commentErrorMessage = error.getDefaultMessage();
+
+                ModelAndView mav = new ModelAndView();
+                //MessgeIdはメッセージとコメントの紐づけのため直接送るcommentsテーブルのmessageId
+                int MessageId = commentForm.getMessageId();
+                session.setAttribute("MessageId", MessageId);
+                session.setAttribute("commentErrorMessage", commentErrorMessage);
+                // rootへリダイレクト
+                return new ModelAndView("redirect:/");
+            }
+        }
+        // 投稿をテーブルに格納
+        commentService.saveComment(commentForm);
+        // rootへリダイレクト
+        return new ModelAndView("redirect:/");
+    }
+
+    /*
+     *コメント削除処理
+     */
+    @DeleteMapping("/commentDelete/{id}")
+    public ModelAndView deleteComment(@PathVariable Integer id) {
+        // 投稿をテーブルに格納
+        commentService.deleteComment(id);
+        // rootへリダイレクト
+        return new ModelAndView("redirect:/");
+    }
+
 
     /*
      * 投稿削除処理
