@@ -1,5 +1,7 @@
 package com.example.spring_boot.controller.form;
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -13,6 +15,8 @@ public class CommentForm {
     private int id;
 
     @Column
+    @NotBlank(message = "・メッセージを入力してください")
+    @Size(max = 500, message = "・タスクは500文字以内で入力してください")
     private String text;
 
     @Column(name = "user_id")

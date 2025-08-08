@@ -44,6 +44,21 @@
           カテゴリー : <span th:text="${contentData.category}"/>
         </div>
 
+        <!--コメント返信投稿-->
+        <form method="post" action="/commentAdd" th:object="${formModel}">
+          <div class="form-area">
+            <div class="errorMessages" >
+              <div th:if="${MessageId == contentData.id}">
+                <span th:text="${errorMessages}"/>
+              </div>
+            </div>
+            <!--textはEntityへと通じてる-->
+            <textarea class="comment-box" th:field="*{text}" size="20" maxlength="600"/></textarea><br/>
+            <input type="hidden" name="messageId" th:value="${contentData.id}" />
+            <input type="submit" value="返信" />
+          </div>
+        </form>
+
       <!--コメント返信表示処理-->
       <div class="message-icon" th:each="commentData : ${commentData}">
 
@@ -54,24 +69,16 @@
           <div class="text">
             作成日時 : <span th:text="${commentData.createdDate}"/>
           </div>
-          <br />
-      </div>
+          <div class="delete-button">
+            <form th:action="@{/commentDelete/{id}(id=${commentData.id})}" th:method="delete">
+              <input type="submit" value="削除">
+            </form>
+          </div>
+        </div>
+        <br/>
       </div>
     </div>
   </div>
-
-
-
-<!--      <div class="createdDate">-->
-<!--        投稿日時 : <span th:text="${contentData.createdDate}"/>-->
-<!--      </div>-->
-<!--      <div class="userId">-->
-<!--        投稿者 : <span th:text="${contentData.userId}"/>-->
-<!--      </div>-->
-<!--      <div class="comment">-->
-<!--        コメント : <span th:text="${contentData.comment}"/>-->
-<!--      </div>-->
-
 
 
 
