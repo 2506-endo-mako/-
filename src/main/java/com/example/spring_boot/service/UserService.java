@@ -22,6 +22,7 @@ public class UserService {
      */
     public User selectUser(String account, String password) {
         List<User> users = userRepository.findByAccountAndPassword(account, password);
+        String encPassword = CipherUtil.encrypt(password);
         if (users.isEmpty()) {
             return null;
         }
