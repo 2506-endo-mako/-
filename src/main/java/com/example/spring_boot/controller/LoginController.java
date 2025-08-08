@@ -26,7 +26,7 @@ public class LoginController {
     /*
      * ログイン画面
      */
-    @GetMapping("/login")
+    @GetMapping
     public ModelAndView newContent() {
         ModelAndView mav = new ModelAndView();
         UserForm userForm = new UserForm();
@@ -42,6 +42,7 @@ public class LoginController {
      */
     @PostMapping("/login")
     public ModelAndView login(@Validated @ModelAttribute("formModel") UserForm userForm, BindingResult result) {
+        ModelAndView mav = new ModelAndView();
         //バリデーション
         if (result.hasErrors()) {
             List<String> errorMessages = new ArrayList<>();
@@ -50,16 +51,21 @@ public class LoginController {
                 errorMessages.add(error.getDefaultMessage());
             }
             session.setAttribute("errorMessages", errorMessages);
-            return new ModelAndView("redirect:/login");
+            return new ModelAndView("redirect:/");
         }
-
         String account = userForm.getAccount();
         String password = userForm.getPassword();
         //パスワード暗号化
-        String encPassword = PasswordHashEncode.encode(password);
-        User user = userService.selectUser(account, encPassword);
+        //String encPassword = PasswordHashEncode.encode(password);
+        User user = userService.selectUser(account, password);
+
+        if (user == null) {
+            session.setAttribute("errorMessages", "ログインに失敗しました");
+            return new ModelAndView("redirect:/");
+        }
+
         session.setAttribute("loginUser", user);
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/top");
     }
 
     /*
@@ -69,6 +75,6 @@ public class LoginController {
     public ModelAndView logout() {
         // セッションの破棄
         session.invalidate();
-        return new ModelAndView("redirect:/login");
+        return new ModelAndView("redirect:/");
     }
 }

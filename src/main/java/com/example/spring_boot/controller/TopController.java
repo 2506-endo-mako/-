@@ -34,7 +34,7 @@ public class TopController {
     /*
      * TOP画面表示処理
      */
-    @GetMapping
+    @GetMapping("/top")
     //required = falseで@RequestParamで値の入力が何もなくてもエラーにならない
     public ModelAndView top(@RequestParam(name = "start_date", required = false) String startDate,
                             @RequestParam(name = "end_date", required = false) String endDate,
@@ -101,7 +101,7 @@ public class TopController {
         // 投稿をテーブルに格納
         messageService.saveMessages(messagesForm);
         // rootへリダイレクト
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/top");
     }
 
     /*
@@ -121,13 +121,13 @@ public class TopController {
                 session.setAttribute("MessageId", MessageId);
                 session.setAttribute("commentErrorMessage", commentErrorMessage);
                 // rootへリダイレクト
-                return new ModelAndView("redirect:/");
+                return new ModelAndView("redirect:/top");
             }
         }
         // 投稿をテーブルに格納
         commentService.saveComment(commentForm);
         // rootへリダイレクト
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/top");
     }
 
     /*
@@ -138,7 +138,7 @@ public class TopController {
         // 投稿をテーブルに格納
         commentService.deleteComment(id);
         // rootへリダイレクト
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/top");
     }
 
 
@@ -150,7 +150,7 @@ public class TopController {
         // 投稿をテーブルに格納
         messageService.deleteMessages(id);
         // rootへリダイレクト
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/top");
     }
 
 }
