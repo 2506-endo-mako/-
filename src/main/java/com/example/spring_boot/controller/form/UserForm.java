@@ -24,11 +24,13 @@ public class UserForm {
 
     private String name;
 
-    @Column(name = "created_date")
+    @Column(name = "branch_id", insertable = true, updatable = true)
     private Integer branchId;
 
+    @Column(name = "department_id", insertable = true, updatable = true)
     private Integer departmentId;
 
+    @Column(name = "is_stopped")
     private Integer isStopped;
 
     @Column(name = "created_date", insertable = false, updatable = false)
