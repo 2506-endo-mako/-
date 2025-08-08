@@ -3,6 +3,7 @@ package com.example.spring_boot.service;
 import com.example.spring_boot.controller.form.UserForm;
 import com.example.spring_boot.repository.UserRepository;
 import com.example.spring_boot.repository.entity.User;
+import com.example.spring_boot.util.PasswordHashEncode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,8 +23,8 @@ public class UserService {
     /*
      * ログイン情報を1件取得
      */
-    public User selectUser(String account, String encPassword) {
-        List<User> users = userRepository.findByAccountAndPassword(account, encPassword);
+    public User selectUser(String account, String password) {
+        List<User> users = userRepository.findByAccountAndPassword(account, password);
         if (users.isEmpty()) {
             return null;
         }
@@ -96,7 +97,5 @@ public class UserService {
         user.setUpdatedDate(nowDate);
         return user;
     }
-
 }
-
 
