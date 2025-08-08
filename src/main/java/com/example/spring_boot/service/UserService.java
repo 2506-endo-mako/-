@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -25,6 +28,14 @@ public class UserService {
             return null;
         }
         return users.get(0);
+    }
+
+    /*
+     * レコード追加
+     */
+    public void saveUser(UserForm reqUser) {
+        User saveUser = setUserEntity(reqUser);
+        userRepository.save(saveUser);
     }
 
     /*
@@ -56,6 +67,36 @@ public class UserService {
         }
         return users;
     }
+
+    private User setUserEntity(UserForm reqUser) {
+        //現在日時を取得
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
+        //変数endにsdfからformatメソッドで引数dateを渡したものを代入して
+        //現在日時をendDateに入れている
+        String strDate = sdf.format(date);
+        Date nowDate;
+        try {
+            nowDate = sdf.parse(strDate);
+        } catch (ParseException e) {
+            //例外が発生した場所や原因をより詳細に把握できる
+            e.printStackTrace();
+            return null;
+        }
+
+        User user = new User();
+        user.setId(reqUser.getId());
+        user.setAccount(reqUser.getAccount());
+        user.setPassword(reqUser.getPassword());
+        user.setName(reqUser.getName());
+        user.setBranchId(reqUser.getBranchId());
+        user.setDepartmentId(reqUser.getDepartmentId());
+        user.setCreatedDate(reqUser.getCreatedDate());
+        user.setUpdatedDate(nowDate);
+        return user;
+    }
+
 }
 
 

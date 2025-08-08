@@ -1,5 +1,6 @@
 package com.example.spring_boot.controller.form;
 import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +9,7 @@ import java.util.Date;
 @Setter
 
 public class BranchForm {
+
     @Column
     private int id;
 

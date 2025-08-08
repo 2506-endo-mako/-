@@ -31,13 +31,13 @@ public class User {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "branchId")
+    @Column(name = "branch_id", insertable = true, updatable = true)
     private Integer branchId;
 
-    @Column(name = "departmentId")
+    @Column(name = "department_id", insertable = true, updatable = true)
     private Integer departmentId;
 
-    @Column(name = "isStopped")
+    @Column(name = "is_stopped")
     private Integer isStopped;
 
     @Column(name = "created_date", insertable = false, updatable = false)

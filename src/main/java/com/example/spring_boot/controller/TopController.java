@@ -2,6 +2,7 @@ package com.example.spring_boot.controller;
 
 import com.example.spring_boot.controller.form.CommentForm;
 import com.example.spring_boot.controller.form.MessageForm;
+import com.example.spring_boot.controller.form.UserForm;
 import com.example.spring_boot.repository.MessageRepository;
 import com.example.spring_boot.service.CommentService;
 import com.example.spring_boot.service.MessageService;
@@ -140,5 +141,7 @@ public class TopController {
         // rootへリダイレクト
         return new ModelAndView("redirect:/");
     }
+
+
 
 }
