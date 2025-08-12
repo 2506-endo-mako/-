@@ -8,52 +8,44 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name = "messageUsers")
 @Getter
 @Setter
+@SecondaryTable(name = "users",
+        pkJoinColumns = @PrimaryKeyJoinColumn(name = "user_id"))
 
-public class User implements Serializable {
+public class MessageUser {
 
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-//    @ManyToOne
-//    @JoinColumn(name="message_id")
-//    private Message messages;
+    @Column(name = "title")
+    private String title;
+
+    @Column(name = "text")
+    private String text;
+
+    @Column(name = "category")
+    private String category;
+
+    @Column(name = "user_id")
+    private int userId;
 
     @Column(name = "account")
     private String account;
 
-    @Column(name = "password")
-    private String password;
-
     @Column(name = "name")
     private String name;
-
-    @Column(name = "branch_id", insertable = true, updatable = true)
-    private Integer branchId;
-
-    @Column(name = "department_id", insertable = true, updatable = true)
-    private Integer departmentId;
-
-    @Column(name = "is_stopped")
-    private Integer isStopped;
 
     @Column(name = "created_date", insertable = false, updatable = false)
     private Date createdDate;
 
     @Column(name = "updated_date", insertable = false, updatable = true)
     private Date updatedDate;
-
-//    @OneToMany(mappedBy="user", cascade=CascadeType.ALL)
-//    private List<Branch> branches;
-//    private List<Department> departments;
 
 }

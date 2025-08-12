@@ -60,6 +60,6 @@ public class SignUpController {
             }
         }
         userService.saveUser(userForm);
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/userManage");
     }
 }

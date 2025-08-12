@@ -25,12 +25,28 @@ public class UserService {
     UserRepository userRepository;
 
     /*
-     * レコード全件取得処理
+     * ユーザーのレコード全件取得処理
      */
     public List<UserForm> findAllUser() {
         List<User> results = userRepository.findAll();
         List<UserForm> users = setAllUser(results);
         return users;
+    }
+
+    /*
+     * 編集する投稿を１件取得
+     */
+    public UserForm editUser(Integer intId) {
+        List<User> results = new ArrayList<>();
+        results.add((User) userRepository.findById(intId).orElse(null)); //nullかもしれない（optional）
+        //①resultsから0番目の要素を取り出して新しい変数に入れる
+        User result = results.get(0);
+        //②取り出した変数がnullかどうかチェックする→③nullだったらnullを返す
+        if(result == null){
+            return null;
+        }
+        List<UserForm> user = setAllUser(results);
+        return user.get(0);
     }
 
     /*
@@ -46,8 +62,11 @@ public class UserService {
             userForm.setName(result.getName());
             userForm.setBranchId(result.getBranchId());
             userForm.setDepartmentId(result.getDepartmentId());
+
             //userForm.setBranchName(result.getBranchName());
             //userForm.setDepartmentName(result.getDepartmentName());
+
+            userForm.setIsStopped(result.getIsStopped());
             users.add(userForm);
         }
         return users;
@@ -100,7 +119,12 @@ public class UserService {
         user.setName(reqUser.getName());
         user.setBranchId(reqUser.getBranchId());
         user.setDepartmentId(reqUser.getDepartmentId());
-        user.setCreatedDate(reqUser.getCreatedDate());
+        if(reqUser.getIsStopped() == null) {
+         user.setIsStopped(0);
+        } else {
+            user.setIsStopped(reqUser.getIsStopped());
+        }
+        user.setCreatedDate(nowDate);
         user.setUpdatedDate(nowDate);
         return user;
     }
