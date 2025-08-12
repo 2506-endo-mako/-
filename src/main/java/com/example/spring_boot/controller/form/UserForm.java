@@ -13,6 +13,8 @@ import java.util.Date;
 @Setter
 public class UserForm {
 
+    @Id
+    @Column
     private int id;
 
     @Column
@@ -30,7 +32,7 @@ public class UserForm {
     @Column(name = "department_id", insertable = true, updatable = true)
     private Integer departmentId;
 
-    @Column(name = "is_stopped")
+    @Column(name = "is_stopped", insertable = false, updatable = true)
     private Integer isStopped;
 
     @Column(name = "created_date", insertable = false, updatable = false)

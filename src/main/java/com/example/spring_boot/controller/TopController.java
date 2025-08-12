@@ -6,6 +6,7 @@ import com.example.spring_boot.controller.form.UserForm;
 import com.example.spring_boot.repository.MessageRepository;
 import com.example.spring_boot.service.CommentService;
 import com.example.spring_boot.service.MessageService;
+import com.example.spring_boot.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.ParseException;
@@ -27,6 +28,8 @@ public class TopController {
     @Autowired
     MessageService messageService;
     @Autowired
+    UserService userService;
+    @Autowired
     CommentService commentService;
     @Autowired
     HttpSession session;
@@ -42,7 +45,7 @@ public class TopController {
                             @RequestParam(name = "category", required = false) String category) {
 
             ModelAndView mav = new ModelAndView();
-            // タスクを全件取得
+            // messagesテーブルの情報を全件取得
             List<MessageForm> contentData = messageService.findAllMessages(startDate,endDate,"%" + category + "%");
             // 画面遷移先を指定
             mav.setViewName("/top");
@@ -51,6 +54,12 @@ public class TopController {
             mav.addObject("startDate", startDate);
             mav.addObject("endDate", endDate);
             mav.addObject("category", category);
+
+            List<UserForm> userData = userService.findAllUser();
+            // 画面遷移先を指定
+            mav.setViewName("/top");
+            // 投稿データオブジェクトを保管
+            mav.addObject("userData", userData);
 
             //コメント内容表示処理
             // 投稿を全件取得
@@ -61,6 +70,7 @@ public class TopController {
             mav.addObject("commentData", commentData);
             mav.addObject("MessageId",session.getAttribute("MessageId"));
             mav.addObject("errorMessages", session.getAttribute("commentErrorMessage"));
+            mav.addObject("errorMessages", session.getAttribute("errorMessages"));
             //コメント返信用に空のcommentFormを準備
             mav.addObject("formModel", new CommentForm());
             session.invalidate();

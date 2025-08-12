@@ -10,19 +10,26 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "messages")
 @Getter
 @Setter
-public class Message {
+
+public class Message implements Serializable {
 
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
+
+//    @OneToMany(mappedBy="messages", cascade=CascadeType.ALL)
+//    private List<User> users;
+
 
     @Column(name = "title")
     private String title;

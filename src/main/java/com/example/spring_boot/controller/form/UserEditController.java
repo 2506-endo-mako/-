@@ -1,4 +1,4 @@
-package com.example.spring_boot.controller;
+package com.example.spring_boot.controller.form;
 
 import com.example.spring_boot.controller.form.UserForm;
 import com.example.spring_boot.service.UserService;
@@ -8,45 +8,58 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
-public class SignUpController {
+public class UserEditController {
     @Autowired
     UserService userService;
     @Autowired
     HttpSession session;
 
     /*
-     * ユーザー登録画面表示
+     *編集画面表示
      */
-    @GetMapping("/signUp")
-    public ModelAndView signUpContent() {
+    @GetMapping(value={"/userEdit/{id}"})
+    @ResponseBody
+    public ModelAndView editContent(@PathVariable Integer id) {
+        List<String> errorMessages = new ArrayList<>();
         ModelAndView mav = new ModelAndView();
-        // form用の空のentityを準備
-        UserForm userForm = new UserForm();
-        // 画面遷移先を指定
-        mav.setViewName("/signUp");
-        // 準備した空のFormを保管
-        mav.addObject("formModel", userForm);
-        mav.addObject("errorMessages", session.getAttribute("errorMessages"));
-        session.invalidate();
+
+//        if (!id.matches("^[0-9]*$") || id.equals(null)) {
+//            session.setAttribute("errorMessages", "・不正なパラメータです");
+//            return new ModelAndView("redirect:/");
+//        }
+
+//        Integer intId = Integer.parseInt(id);
+        //編集する投稿を取得
+        UserForm users = userService.editUser(id);
+
+        if (users == null) {
+            session.setAttribute("errorMessages", "・不正なパラメータです");
+            return new ModelAndView("redirect:/");
+        }
+
+        mav.setViewName("/userEdit");
+        // 編集内容を保管
+        mav.addObject("formModel", users);
+        //エラー表示
+        //setErrorMessage(mav);
         return mav;
     }
 
 
     /*
-     * 新規ユーザー登録処理
+     * 新規ユーザー編集処理
      */
-    @PostMapping("/signUpAdd")
-    public ModelAndView addContent(@Validated @ModelAttribute("formModel") UserForm userForm,
+    @PostMapping("/userEditUpdate")
+    public ModelAndView userEditUpdateContent(@Validated @ModelAttribute("formModel") UserForm userForm,
                                    BindingResult result) throws ParseException {
         //バリデーション
         if (result.hasErrors()) {
@@ -56,7 +69,7 @@ public class SignUpController {
                 errorMessages.add(error.getDefaultMessage());
 
                 session.setAttribute("errorMessages", errorMessages);
-                return new ModelAndView("redirect:/signUp");
+                return new ModelAndView("redirect:/userEdit");
             }
         }
         userService.saveUser(userForm);
