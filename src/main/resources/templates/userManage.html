@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/style.css}" rel="styleSheet">
+    <title>ユーザ管理</title>
+</head>
+<body>
+<div class="header-contents">
+    <h2>ユーザ管理</h2>
+    <!--エラーメッセージ -->
+    <div class="errorMessages" th:each="errorMessage : ${errorMessages}">
+        <li><span th:text="${errorMessage}"/></li>
+    </div>
+    <!--新規ユーザー登録-->
+    <a href="/signUp">
+        <button class="signUp-button" type="button">新規ユーザー登録</button>
+    </a>
+    <div class="main-contents">
+        <form method="post" action="/changeStatus">
+            <div class="form-area" th:each="userData : ${userData}">
+                <div class="account">
+                    アカウント : <span th:text="${userData.account}"/>
+                </div>
+                <div class="name">
+                    名前 : <span th:text="${userData.name}"/>
+                </div>
+                <!--            <div class="branchName">-->
+                <!--                支店名 : <span th:text="${userData.branchName}"/>-->
+                <!--            </div>-->
+                <!--            <div class="departmentName">-->
+                <!--                部署名 : <span th:text="${userData.departmentName}"/>-->
+                <!--            </div>-->
+                <div class="isStopped">
+                    ユーザ停止状態 : <select name="status">
+                    <option value="0" th:selected="${userData.isStopped == 1}"> 稼働</option>
+                    <option value="1" th:selected="${userData.isStopped == 2}"> 停止</option>
+                </select>
+                    <input type="submit" value="更新"/>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="footer-contents">
+    <form action="/top">
+        <input type="submit" value="戻る"/>
+    </form>
+</div>
+</body>
+</html>

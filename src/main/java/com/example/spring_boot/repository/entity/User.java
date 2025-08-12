@@ -8,14 +8,16 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
 
-public class User {
+public class User implements Serializable {
 
     @Id
     @Column
@@ -49,5 +51,9 @@ public class User {
 
     @Column(name = "updated_date", insertable = false, updatable = true)
     private Date updatedDate;
+
+//    @OneToMany(mappedBy="user", cascade=CascadeType.ALL)
+//    private List<Branch> branches;
+//    private List<Department> departments;
 
 }
