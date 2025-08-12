@@ -1,7 +1,11 @@
 package com.example.spring_boot.service;
 
+import com.example.spring_boot.controller.form.BranchForm;
+import com.example.spring_boot.controller.form.DepartmentForm;
 import com.example.spring_boot.controller.form.UserForm;
 import com.example.spring_boot.repository.UserRepository;
+import com.example.spring_boot.repository.entity.Branch;
+import com.example.spring_boot.repository.entity.Department;
 import com.example.spring_boot.repository.entity.User;
 import com.example.spring_boot.util.PasswordHashEncode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,26 +23,6 @@ import java.util.List;
 public class UserService {
     @Autowired
     UserRepository userRepository;
-
-    /*
-     * ログイン情報を1件取得
-     */
-    public User selectUser(String account, String password) {
-        List<User> users = userRepository.findByAccountAndPassword(account, password);
-        String encPassword = CipherUtil.encrypt(password);
-        if (users.isEmpty()) {
-            return null;
-        }
-        return users.get(0);
-    }
-
-    /*
-     * レコード追加
-     */
-    public void saveUser(UserForm reqUser) {
-        User saveUser = setUserEntity(reqUser);
-        userRepository.save(saveUser);
-    }
 
     /*
      * レコード全件取得処理
@@ -62,14 +46,36 @@ public class UserService {
             userForm.setName(result.getName());
             userForm.setBranchId(result.getBranchId());
             userForm.setDepartmentId(result.getDepartmentId());
-            userForm.setBranchId(result.getBranchId());
-            userForm.setDepartmentId(result.getDepartmentId());
-            userForm.setIsStopped(result.getIsStopped());
+            //userForm.setBranchName(result.getBranchName());
+            //userForm.setDepartmentName(result.getDepartmentName());
             users.add(userForm);
         }
         return users;
     }
 
+    /*
+     * ログイン情報を1件取得
+     */
+    public User selectUser(String account, String password) {
+        List<User> users = userRepository.findByAccountAndPassword(account, password);
+        //String encPassword = CipherUtil.encrypt(password);
+        if (users.isEmpty()) {
+            return null;
+        }
+        return users.get(0);
+    }
+
+    /*
+     * レコード追加
+     */
+    public void saveUser(UserForm reqUser) {
+        User saveUser = setUserEntity(reqUser);
+        userRepository.save(saveUser);
+    }
+
+    /*
+     * リクエストから取得した情報をEntityに設定
+     */
     private User setUserEntity(UserForm reqUser) {
         //現在日時を取得
         Date date = new Date();
@@ -96,6 +102,35 @@ public class UserService {
         user.setDepartmentId(reqUser.getDepartmentId());
         user.setCreatedDate(reqUser.getCreatedDate());
         user.setUpdatedDate(nowDate);
+        return user;
+    }
+
+//    /*
+//     * ユーザ稼働状態（ステータス）更新
+//     */
+//    public void updateUser(UserForm reqUser) {
+//        //select文流す　WHERE句はkEYのidのみ
+//        User saveUser = new User();
+//        saveUser = (userRepository.findById(reqUser.getId()).orElse(null));
+//        saveUser = updateSetUserEntity(reqUser, saveUser);
+//        userRepository.save(saveUser);
+//    }
+
+    /*
+     * リクエストから取得した情報をEntityに設定
+     */
+    private User updateSetUserEntity(UserForm reqUser,User saveUser, Branch saveBranch, Department saveDepartment) {
+
+        User user = new User();
+
+        user.setId(saveUser.getId());
+        user.setAccount(saveUser.getAccount());
+        user.setName(reqUser.getName());
+        user.setBranchId(saveUser.getBranchId());
+        user.setDepartmentId(saveUser.getDepartmentId());
+        user.setIsStopped(saveUser.getIsStopped());
+        user.setName(saveBranch.getName());
+        user.setName(saveDepartment.getName());
         return user;
     }
 }
