@@ -152,7 +152,6 @@ public class TopController {
         return new ModelAndView("redirect:/top");
     }
 
-
     /*
      * 投稿削除処理
      */
@@ -163,7 +162,5 @@ public class TopController {
         // rootへリダイレクト
         return new ModelAndView("redirect:/top");
     }
-
-
 
 }

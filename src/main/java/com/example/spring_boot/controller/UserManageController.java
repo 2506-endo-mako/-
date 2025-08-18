@@ -15,7 +15,6 @@ import org.springframework.web.servlet.ModelAndView;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class UserManageController {
@@ -47,8 +46,8 @@ public class UserManageController {
     /*
      * ユーザー管理処理
      */
-    @PostMapping("/changeStatus")
-    public ModelAndView changeStatus(@Validated @ModelAttribute("formModel") UserForm userForm,
+    @PostMapping("/manage")
+    public ModelAndView manage(@Validated @ModelAttribute("formModel") UserForm userForm,
                                    BindingResult result) throws ParseException {
         //バリデーション
         if (result.hasErrors()) {
@@ -65,6 +64,16 @@ public class UserManageController {
         return new ModelAndView("redirect:/userManage");
     }
 
-
-
+    /*
+     *ステータス変更処理
+     */
+    @PutMapping("/updateStatus/{id}")
+    public ModelAndView updateStatus(@PathVariable Integer id,
+                                     @RequestParam(name = "status", required = false) Integer isStopped,
+                                     @ModelAttribute("formModel") UserForm userForm) {
+        // ステータスを更新
+        userService.updateUser(id, isStopped);
+        // rootへリダイレクト
+        return new ModelAndView("redirect:/userManage");
+    }
 }
