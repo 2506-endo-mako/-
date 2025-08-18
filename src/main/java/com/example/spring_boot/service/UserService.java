@@ -129,32 +129,29 @@ public class UserService {
         return user;
     }
 
-//    /*
-//     * ユーザ稼働状態（ステータス）更新
-//     */
-//    public void updateUser(UserForm reqUser) {
-//        //select文流す　WHERE句はkEYのidのみ
-//        User saveUser = new User();
-//        saveUser = (userRepository.findById(reqUser.getId()).orElse(null));
-//        saveUser = updateSetUserEntity(reqUser, saveUser);
-//        userRepository.save(saveUser);
-//    }
+    /*
+     * ユーザ稼働状態（ステータス）更新
+     */
+    public void updateUser(Integer id, Integer isStopped) {
+        userRepository.updateStatusById(id, isStopped);
+    }
 
     /*
      * リクエストから取得した情報をEntityに設定
      */
-    private User updateSetUserEntity(UserForm reqUser,User saveUser, Branch saveBranch, Department saveDepartment) {
+    private User updateSetUserEntity(UserForm reqUser,User saveUser) {
 
         User user = new User();
 
         user.setId(saveUser.getId());
         user.setAccount(saveUser.getAccount());
+        user.setPassword(reqUser.getPassword());
         user.setName(reqUser.getName());
         user.setBranchId(saveUser.getBranchId());
         user.setDepartmentId(saveUser.getDepartmentId());
         user.setIsStopped(saveUser.getIsStopped());
-        user.setName(saveBranch.getName());
-        user.setName(saveDepartment.getName());
+        //user.setName(saveBranch.getName());
+        //user.setName(saveDepartment.getName());
         return user;
     }
 }

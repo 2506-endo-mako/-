@@ -17,7 +17,7 @@
         <button class="signUp-button" type="button">新規ユーザー登録</button>
     </a>
     <div class="main-contents">
-        <form method="post" action="/changeStatus">
+        <form method="post" action="/manage">
             <div class="form-area" th:each="userData : ${userData}">
                 <div class="account">
                     アカウント : <span th:text="${userData.account}"/>
@@ -31,17 +31,42 @@
                 <!--            <div class="departmentName">-->
                 <!--                部署名 : <span th:text="${userData.departmentName}"/>-->
                 <!--            </div>-->
-                <div class="isStopped">
-                    ユーザ停止状態 : <select name="status">
-                    <option value="0" th:selected="${userData.isStopped == 1}"> 稼働</option>
-                    <option value="1" th:selected="${userData.isStopped == 2}"> 停止</option>
-                </select>
-                    <input type="submit" value="更新"/>
-                </div>
+                <form th:action="@{/updateStatus/{id}(id=${userData.id})}" th:method="put">
+                    <div class="isStopped">
+                        ユーザー状態 : <select name="status">
+                        <option value="0" th:selected="${userData.isStopped == 0}"> 稼働</option>
+                        <option value="1" th:selected="${userData.isStopped == 1}"> 停止</option>
+                    </select>
+                        <input class=confirm-action-btn type="submit" value="更新"/>
+                    </div>
+                </form>
             </div>
         </form>
     </div>
 </div>
+<script>
+    //★更新ボタンへのダイアログ機能
+    // 'confirm-action-btn' クラスを持つすべての要素を取得
+    const confirmButtons = document.querySelectorAll('.confirm-action-btn');
+
+    //取得した各ボタンに対してループ処理を行う
+    confirmButtons.forEach(button => {
+        button.addEventListener("click", function(event) {
+            // data-message 属性から確認メッセージを取得
+            const message = this.dataset.message || "ステータスを更新してもよろしいですか？"; // デフォルトメッセージも設定
+
+            var result = window.confirm(message);
+                if( result ) {
+                    alert("OKがクリックされました");
+                // もしフォーム送信やリンク遷移を続行させたい場合は、ここで event.preventDefault() を書かない
+                // または、alert("OKがクリックされました"); 以外の処理を行う
+                } else {
+                    event.preventDefault(); // デフォルトの動作をキャンセル
+                    alert("キャンセルがクリックされました");
+                }
+        });
+    });
+</script>
 <div class="footer-contents">
     <form action="/top">
         <input type="submit" value="戻る"/>

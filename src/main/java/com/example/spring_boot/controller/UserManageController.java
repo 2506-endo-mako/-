@@ -9,9 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.text.ParseException;
@@ -48,8 +46,8 @@ public class UserManageController {
     /*
      * ユーザー管理処理
      */
-    @PostMapping("/changeStatus")
-    public ModelAndView changeStatus(@Validated @ModelAttribute("formModel") UserForm userForm,
+    @PostMapping("/manage")
+    public ModelAndView manage(@Validated @ModelAttribute("formModel") UserForm userForm,
                                    BindingResult result) throws ParseException {
         //バリデーション
         if (result.hasErrors()) {
@@ -63,6 +61,19 @@ public class UserManageController {
             }
         }
         userService.findAllUser();
+        return new ModelAndView("redirect:/userManage");
+    }
+
+    /*
+     *ステータス変更処理
+     */
+    @PutMapping("/updateStatus/{id}")
+    public ModelAndView updateStatus(@PathVariable Integer id,
+                                     @RequestParam(name = "status", required = false) Integer isStopped,
+                                     @ModelAttribute("formModel") UserForm userForm) {
+        // ステータスを更新
+        userService.updateUser(id, isStopped);
+        // rootへリダイレクト
         return new ModelAndView("redirect:/userManage");
     }
 }
