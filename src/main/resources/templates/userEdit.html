@@ -8,25 +8,26 @@
 <body>
 <div class="header-contents">
   <h2>ユーザー編集</h2>
+
   <!--エラーメッセージ -->
-  <div class="errorMessages" th:each="errorMessage : ${errorMessages}">
-    <li><span th:text="${errorMessage}"/></li>
+  <div class="errorMessages" th:each="errorMessages : ${errorMessages}">
+    <li><span th:text="${errorMessages}"/></li>
   </div>
-  <form method="get" action="/userEditUpdate" th:object="${formModel}">
+  <form th:method="put" th:action="@{/userEditUpdate/{id}(id=${formModel.id})}" th:object="${formModel}">
     <div class="form-area">
       <label>アカウント名</label>
       <input th:name="account" type="text" th:field="*{account}"/>
       <label>パスワード</label>
-      <input th:name="password" type="password" th:field="*{password}"/>
+      <input th:name="password" type="text" th:field="*{password}"/>
       <label>確認用パスワード</label>
       <input th:name="confirm_password"/>
       <label>名前</label>
-      <input th:name="name" type="name" th:field="*{name}"/>
+      <input th:name="name" type="text" th:field="*{name}"/>
       <label>支社ID</label>
-      <input th:name="branchId" type="branchId" th:field="*{branchId}"/>
+      <input th:name="branchId" type="text" th:field="*{branchId}"/>
       <label>部署ID</label>
-      <input th:name="departmentId" type="departmentId" th:field="*{departmentId}"/>
-      <input type="submit" value="登録"/>
+      <input th:name="departmentId" type="text" th:field="*{departmentId}"/>
+      <input type="submit" value="更新"/>
     </div>
   </form>
 </div>

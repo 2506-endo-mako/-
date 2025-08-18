@@ -1,8 +1,6 @@
 package com.example.spring_boot.controller.form;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,13 +8,13 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import java.util.Date;
 
 @Getter
 @Setter
-public class UserForm {
+
+public class UserEditForm {
 
     @Id
     @Column
@@ -24,17 +22,24 @@ public class UserForm {
 
     @Column
     @NotBlank(message = "アカウントを入力してください")
+    /** 配列要素重複チェック */
+    @Size(min = 5,max = 20, message = "アカウントは半角英数字かつ6文字以上20文字以下で入力してください")
+    @Pattern(regexp = "[a-zA-Z0-9]+", message = "アカウントは半角英数字かつ6文字以上20文字以下で入力してください")
     private String account;
 
     @NotBlank(message = "パスワードを入力してください")
     @Pattern(regexp = "[a-zA-Z0-9]+", message = "パスワードは半角文字かつ6文字以上20文字以下で入力してください")
     private String password;
 
+    @NotBlank(message = "氏名を入力してください")
+    @Size(max = 10, message = "氏名は10文字以下で入力してください")
     private String name;
 
+    @NotNull(message = "支社を選択してください")
     @Column(name = "branch_id", insertable = true, updatable = true)
     private Integer branchId;
 
+    @NotNull(message = "部署を選択してください")
     @Column(name = "department_id", insertable = true, updatable = true)
     private Integer departmentId;
 

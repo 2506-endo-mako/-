@@ -1,13 +1,11 @@
 package com.example.spring_boot.service;
 
-import com.example.spring_boot.controller.form.BranchForm;
-import com.example.spring_boot.controller.form.DepartmentForm;
+import com.example.spring_boot.controller.form.UserEditForm;
 import com.example.spring_boot.controller.form.UserForm;
 import com.example.spring_boot.repository.UserRepository;
 import com.example.spring_boot.repository.entity.Branch;
 import com.example.spring_boot.repository.entity.Department;
 import com.example.spring_boot.repository.entity.User;
-import com.example.spring_boot.util.PasswordHashEncode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,19 +32,13 @@ public class UserService {
     }
 
     /*
-     * 編集する投稿を１件取得
+     * レコード1件取得処理
      */
-    public UserForm editUser(Integer intId) {
+    public UserForm editUser(Integer id) {
         List<User> results = new ArrayList<>();
-        results.add((User) userRepository.findById(intId).orElse(null)); //nullかもしれない（optional）
-        //①resultsから0番目の要素を取り出して新しい変数に入れる
-        User result = results.get(0);
-        //②取り出した変数がnullかどうかチェックする→③nullだったらnullを返す
-        if(result == null){
-            return null;
-        }
-        List<UserForm> user = setAllUser(results);
-        return user.get(0);
+        results.add((User) userRepository.findById(id).orElse(null));
+        List<UserForm> users = setAllUser(results);
+        return users.get(0);
     }
 
     /*
@@ -59,6 +51,7 @@ public class UserService {
             User result = results.get(i);
             userForm.setId(result.getId());
             userForm.setAccount(result.getAccount());
+            userForm.setPassword(result.getPassword());
             userForm.setName(result.getName());
             userForm.setBranchId(result.getBranchId());
             userForm.setDepartmentId(result.getDepartmentId());
@@ -96,6 +89,51 @@ public class UserService {
      * リクエストから取得した情報をEntityに設定
      */
     private User setUserEntity(UserForm reqUser) {
+        //現在日時を取得
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
+        //変数endにsdfからformatメソッドで引数dateを渡したものを代入して
+        //現在日時をendDateに入れている
+        String strDate = sdf.format(date);
+        Date nowDate;
+        try {
+            nowDate = sdf.parse(strDate);
+        } catch (ParseException e) {
+            //例外が発生した場所や原因をより詳細に把握できる
+            e.printStackTrace();
+            return null;
+        }
+
+        User user = new User();
+        user.setId(reqUser.getId());
+        user.setAccount(reqUser.getAccount());
+        user.setPassword(reqUser.getPassword());
+        user.setName(reqUser.getName());
+        user.setBranchId(reqUser.getBranchId());
+        user.setDepartmentId(reqUser.getDepartmentId());
+        if(reqUser.getIsStopped() == null) {
+            user.setIsStopped(0);
+        } else {
+            user.setIsStopped(reqUser.getIsStopped());
+        }
+        user.setCreatedDate(nowDate);
+        user.setUpdatedDate(nowDate);
+        return user;
+    }
+
+
+    /*
+     * 更新したusersテーブルのレコード追加
+     */
+    public void updateUser(UserEditForm reqUser) {
+        User saveUser = setUserEditEntity(reqUser);
+        userRepository.save(saveUser);
+    }
+    /*
+     * リクエストから取得した情報をEntityに設定
+     */
+    private User setUserEditEntity(UserEditForm reqUser) {
         //現在日時を取得
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");

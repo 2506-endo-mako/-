@@ -98,7 +98,8 @@ public class TopController {
      * 新規投稿処理
      */
     @PostMapping("/add")
-    public ModelAndView addContent(@Validated @ModelAttribute("formModel") MessageForm messagesForm, BindingResult result) throws ParseException {
+    public ModelAndView addContent(@Validated @ModelAttribute("formModel") MessageForm messagesForm,
+                                   BindingResult result) throws ParseException {
         //バリデーション
         if (result.hasErrors()) {
             List<String> errorMessages = new ArrayList<>();
@@ -118,7 +119,6 @@ public class TopController {
     /*
      * コメント返信投稿処理
      */
-    //
     @PostMapping("/commentAdd")
     public ModelAndView addComment(@Validated @ModelAttribute("formModel") CommentForm commentForm,
                                    BindingResult result) {

@@ -17,8 +17,8 @@ import java.util.List;
 @Getter
 @Setter
 
-public class User implements Serializable {
 
+public class UserEdit {
     @Id
     @Column(name = "id", insertable = true, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,5 +55,4 @@ public class User implements Serializable {
 //    @OneToMany(mappedBy="user", cascade=CascadeType.ALL)
 //    private List<Branch> branches;
 //    private List<Department> departments;
-
 }

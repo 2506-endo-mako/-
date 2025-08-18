@@ -16,9 +16,11 @@
     <a href="/signUp">
         <button class="signUp-button" type="button">新規ユーザー登録</button>
     </a>
+
     <div class="main-contents">
-        <form method="post" action="/changeStatus">
+        <div method="post" action="/changeStatus">
             <div class="form-area" th:each="userData : ${userData}">
+                <input type=hidden name="id" th:value="${userData.id}"/>
                 <div class="account">
                     アカウント : <span th:text="${userData.account}"/>
                 </div>
@@ -35,11 +37,17 @@
                     ユーザ停止状態 : <select name="status">
                     <option value="0" th:selected="${userData.isStopped == 1}"> 稼働</option>
                     <option value="1" th:selected="${userData.isStopped == 2}"> 停止</option>
-                </select>
+                    </select>
                     <input type="submit" value="更新"/>
                 </div>
-            </div>
-        </form>
+                <!--編集ボタン-->
+                <div class="edit-button">
+                    <form th:action="@{/userEdit/{id}(id=${userData.id})}">
+                        <input type="submit" value="編集"/>
+                    </form>
+                </div>
+            </input>
+        </div>
     </div>
 </div>
 <div class="footer-contents">

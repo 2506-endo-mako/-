@@ -22,17 +22,17 @@ public class FilterConfig {
 //            return bean;
 //        }
 
-        @Bean
-        public FilterRegistrationBean<manageFilter> manageFilter() {
-            FilterRegistrationBean<manageFilter> bean = new FilterRegistrationBean<>();
-
-            bean.setFilter(new manageFilter());
-            //ログイン情報が必要なURL
-            bean.addUrlPatterns("/userManage");
-            bean.addUrlPatterns("/signUp");
-            bean.addUrlPatterns("/userEdit/*");
-            bean.setOrder(2);
-            return bean;
-        }
+//        @Bean
+//        public FilterRegistrationBean<manageFilter> manageFilter() {
+//            FilterRegistrationBean<manageFilter> bean = new FilterRegistrationBean<>();
+//
+//            bean.setFilter(new manageFilter());
+//            //ログイン情報が必要なURL
+//            bean.addUrlPatterns("/userManage");
+//            bean.addUrlPatterns("/signUp");
+//            bean.addUrlPatterns("/userEdit/*");
+//            bean.setOrder(2);
+//            return bean;
+//        }
 
 }
