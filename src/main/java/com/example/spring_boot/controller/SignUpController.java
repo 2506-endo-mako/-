@@ -72,8 +72,10 @@ public class SignUpController {
         //支社と部署の組み合わせが不正の時
         if((userEditForm.getBranchId() == 1 && userEditForm.getDepartmentId() == 3)
                 || (userEditForm.getBranchId() == 1 && userEditForm.getDepartmentId() == 4)
-                || (userEditForm.getBranchId() == 2 && userEditForm.getDepartmentId() == 1)
-                || (userEditForm.getBranchId() == 2 && userEditForm.getDepartmentId() == 2)
+                || (userEditForm.getBranchId() == 1 && userEditForm.getDepartmentId() == 5)
+                || (userEditForm.getBranchId() == 2 && userEditForm.getDepartmentId() == 3)
+                || (userEditForm.getBranchId() == 2 && userEditForm.getDepartmentId() == 4)
+                || (userEditForm.getBranchId() == 2 && userEditForm.getDepartmentId() == 5)
                 || (userEditForm.getBranchId() == 3 && userEditForm.getDepartmentId() == 1)
                 || (userEditForm.getBranchId() == 3 && userEditForm.getDepartmentId() == 2)
                 || (userEditForm.getBranchId() == 4 && userEditForm.getDepartmentId() == 1)
@@ -86,10 +88,13 @@ public class SignUpController {
             session.setAttribute("errorMessages",errorMessages);
             return new ModelAndView("redirect:/signUp");
         }
-
-        // ユーザー名の重複をチェック
-        if (userService.isAccountNameTaken(userEditForm.getAccount())) {
-            session.setAttribute("errorMessages","アカウント名が既に使用されています");
+        //アカウント重複チェック
+        try {
+            // Serviceの更新メソッドを呼び出す
+            userService.updateUser(userEditForm);
+        } catch (Exception e) {
+            // Serviceから重複エラーがスローされた場合
+            session.setAttribute("errorMessages", e.getMessage());
             return new ModelAndView("redirect:/signUp");
         }
 

@@ -94,6 +94,7 @@ public class TopController {
         return mav;
     }
 
+
     /*
      * 新規投稿処理
      */
@@ -110,6 +111,7 @@ public class TopController {
             session.setAttribute("errorMessages", errorMessages);
             return new ModelAndView("redirect:/new");
         }
+
         // 投稿をテーブルに格納
         messageService.saveMessages(messagesForm);
         // rootへリダイレクト

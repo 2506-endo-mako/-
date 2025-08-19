@@ -24,12 +24,15 @@ public class Message implements Serializable {
 
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
 
 //    @OneToMany(mappedBy="messages", cascade=CascadeType.ALL)
 //    private List<User> users;
 
+    // バージョン管理用フィールドを追加
+//    @Version
+//    private int version;
 
     @Column(name = "title")
     private String title;

@@ -32,12 +32,7 @@ public class UserService {
         return users;
     }
 
-    // アカウント名の重複をチェックするメソッド
-    public boolean isAccountNameTaken(String account) {
-        // アカウント名が重複しているかをチェック
-        Optional<User> existingUser = userRepository.findByAccount(account); // 既存のユーザーを取得
-        return existingUser.isPresent(); // 既存のユーザーが存在するかを返す
-    }
+
 
     /*
      * レコード1件取得処理
@@ -135,10 +130,25 @@ public class UserService {
     /*
      * 更新したusersテーブルのレコード追加
      */
-    public void updateUser(UserEditForm reqUser) {
-        User saveUser = setUserEditEntity(reqUser);
-        userRepository.save(saveUser);
+    public void updateUser(UserEditForm reqUser) throws Exception {
+        // 1. フォームから送られてきたアカウント名で、既存のレコードを検索する
+        Optional<User> existingUserOptional = userRepository.findByAccount(reqUser.getAccount());
+
+        // 2. 検索結果が存在する場合、重複チェックを行う
+        if (existingUserOptional.isPresent()) {
+            User existingUser = existingUserOptional.get();
+
+            // 3. 取得したレコードのIDが、更新対象のIDと一致するかどうかを比較する
+            //    IDが一致する場合、それは自分自身のレコードなので重複ではない
+            if (existingUser.getId() != (reqUser.getId())) {
+                // IDが一致しない場合、別のアカウントが同じアカウント名を持っているため重複エラー
+                throw new Exception("このアカウント名はすでに使用されています。");
+            }
+        User saveUsers = setUserEditEntity(reqUser);
+        userRepository.save(saveUsers);
+        }
     }
+
     /*
      * リクエストから取得した情報をEntityに設定
      */
