@@ -39,7 +39,7 @@ public class UserManageController {
         // 準備した空のFormを保管
         mav.addObject("formModel", userForm);
         mav.addObject("errorMessages", session.getAttribute("errorMessages"));
-        session.invalidate();
+        //session.invalidate();
         return mav;
     }
 
