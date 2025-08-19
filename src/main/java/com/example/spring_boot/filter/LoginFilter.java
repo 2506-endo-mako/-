@@ -15,7 +15,7 @@ import java.util.List;
 
 public class LoginFilter implements Filter {
     @Autowired
-    HttpSession httpSession;
+    HttpSession session;
     @Override
     public void doFilter(ServletRequest request,
                          ServletResponse response,
@@ -25,11 +25,12 @@ public class LoginFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        HttpSession session = httpRequest.getSession();
+        HttpSession session = httpRequest.getSession(false);
 
-        if (session.getAttribute("loginUser") != null){
+        if (session != null && session.getAttribute("loginUser") != null){
             chain.doFilter(request, response);
         } else {
+            session = httpRequest.getSession(true);
             session.setAttribute("errorMessages", "ログインしてください");
             //ログイン画面にリダイレクト
             httpResponse.sendRedirect("/");

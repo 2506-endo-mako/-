@@ -5,12 +5,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class manageFilter implements Filter {
+public class ManageFilter implements Filter {
     @Autowired
     HttpSession session;
     @Override
@@ -29,18 +30,16 @@ public class manageFilter implements Filter {
         } else {
             session = httpRequest.getSession(true);
             //エラーメッセージをセット
-            List<String> errorMessages = new ArrayList<>();
-            errorMessages.add("無効なアクセスです");
-            session.setAttribute("errorMessages", errorMessages);
+            session.setAttribute("errorMessages", "無効なアクセスです");
             //TOP画面にリダイレクト
             httpResponse.sendRedirect("/top");
         }
 
     }
 
-//    @Override
-//    public void init(FilterConfig config) {
-//    }
+    @Override
+    public void init(FilterConfig config) {
+    }
 
     @Override
     public void destroy() {

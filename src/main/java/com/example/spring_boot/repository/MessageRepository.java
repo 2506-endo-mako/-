@@ -12,10 +12,8 @@ import java.util.List;
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Integer> {
-//    @Query("SELECT DISTINCT e FROM User e INNER JOIN e.message WHERE e.message.messageId = :messageId ORDER BY e.userId")
-//    List<User> find(@Param("messageId") Integer messageId);
+
     public List<Message> findByCreatedDateBetweenOrderByCreatedDateAsc(Date start,Date end);
     public List<Message> findByCreatedDateBetweenAndCategoryLikeOrderByCreatedDateAsc(Date start, Date end, String category);
 }
-
 
