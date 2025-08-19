@@ -40,22 +40,15 @@
                         <input class=confirm-action-btn type="submit" value="更新"/>
                     </div>
                 </form>
-            </div>
-        </form>
-                <div class="isStopped">
-                    ユーザ停止状態 : <select name="status">
-                    <option value="0" th:selected="${userData.isStopped == 1}"> 稼働</option>
-                    <option value="1" th:selected="${userData.isStopped == 2}"> 停止</option>
-                    </select>
-                    <input type="submit" value="更新"/>
-                </div>
+
                 <!--編集ボタン-->
                 <div class="edit-button">
                     <form th:action="@{/userEdit/{id}(id=${userData.id})}">
                         <input type="submit" value="編集"/>
                     </form>
                 </div>
-            </input>
+            </div>
+        </form>
         </div>
     </div>
 </div>

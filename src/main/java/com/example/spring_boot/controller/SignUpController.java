@@ -1,5 +1,6 @@
 package com.example.spring_boot.controller;
 
+import com.example.spring_boot.controller.form.UserEditForm;
 import com.example.spring_boot.controller.form.UserForm;
 import com.example.spring_boot.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -31,11 +32,11 @@ public class SignUpController {
     public ModelAndView signUpContent() {
         ModelAndView mav = new ModelAndView();
         // form用の空のentityを準備
-        UserForm userForm = new UserForm();
+        UserEditForm userEditForm = new UserEditForm();
         // 画面遷移先を指定
         mav.setViewName("/signUp");
         // 準備した空のFormを保管
-        mav.addObject("formModel", userForm);
+        mav.addObject("formModel", userEditForm);
         mav.addObject("errorMessages", session.getAttribute("errorMessages"));
         session.invalidate();
         return mav;
@@ -46,7 +47,7 @@ public class SignUpController {
      * 新規ユーザー登録処理
      */
     @PostMapping("/signUpAdd")
-    public ModelAndView addContent(@Validated @ModelAttribute("formModel") UserForm userForm,
+    public ModelAndView addContent(@Validated @ModelAttribute("formModel") UserEditForm userEditForm,
                                    BindingResult result) throws ParseException {
         //バリデーション
         if (result.hasErrors()) {
@@ -59,7 +60,40 @@ public class SignUpController {
                 return new ModelAndView("redirect:/signUp");
             }
         }
-        userService.saveUser(userForm);
+        List<String> errorMessages = new ArrayList<>();
+        //パスワードと確認パスワードが違う場合
+        String password = userEditForm.getPassword();
+        String confirmPassword = userEditForm.getConfirmPassword();
+        if(!(password.equals(confirmPassword))) {
+            errorMessages.add("パスワードと確認用パスワードが一致しません");
+            //session.setAttribute("errorMessages", "パスワードと確認用パスワードが一致しません");
+            //return new ModelAndView("redirect:/userEdit/{id}");
+        }
+        //支社と部署の組み合わせが不正の時
+        if((userEditForm.getBranchId() == 1 && userEditForm.getDepartmentId() == 3)
+                || (userEditForm.getBranchId() == 1 && userEditForm.getDepartmentId() == 4)
+                || (userEditForm.getBranchId() == 2 && userEditForm.getDepartmentId() == 1)
+                || (userEditForm.getBranchId() == 2 && userEditForm.getDepartmentId() == 2)
+                || (userEditForm.getBranchId() == 3 && userEditForm.getDepartmentId() == 1)
+                || (userEditForm.getBranchId() == 3 && userEditForm.getDepartmentId() == 2)
+                || (userEditForm.getBranchId() == 4 && userEditForm.getDepartmentId() == 1)
+                || (userEditForm.getBranchId() == 4 && userEditForm.getDepartmentId() == 2)
+                || (userEditForm.getBranchId() == 5 && userEditForm.getDepartmentId() == 1)
+                || (userEditForm.getBranchId() == 5 && userEditForm.getDepartmentId() == 2)) {
+            errorMessages.add("支社と部署の組み合わせが不正です");
+        }
+        if(!(errorMessages.isEmpty())){
+            session.setAttribute("errorMessages",errorMessages);
+            return new ModelAndView("redirect:/signUp");
+        }
+
+        // ユーザー名の重複をチェック
+        if (userService.isAccountNameTaken(userEditForm.getAccount())) {
+            session.setAttribute("errorMessages","アカウント名が既に使用されています");
+            return new ModelAndView("redirect:/signUp");
+        }
+
+        userService.saveUser(userEditForm);
         return new ModelAndView("redirect:/userManage");
     }
 }

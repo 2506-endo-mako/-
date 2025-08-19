@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -29,6 +30,13 @@ public class UserService {
         List<User> results = userRepository.findAll();
         List<UserForm> users = setAllUser(results);
         return users;
+    }
+
+    // アカウント名の重複をチェックするメソッド
+    public boolean isAccountNameTaken(String account) {
+        // アカウント名が重複しているかをチェック
+        Optional<User> existingUser = userRepository.findByAccount(account); // 既存のユーザーを取得
+        return existingUser.isPresent(); // 既存のユーザーが存在するかを返す
     }
 
     /*
@@ -52,6 +60,7 @@ public class UserService {
             userForm.setId(result.getId());
             userForm.setAccount(result.getAccount());
             userForm.setPassword(result.getPassword());
+            //userForm.setConfirmPassword(result.getConfirmPassword());
             userForm.setName(result.getName());
             userForm.setBranchId(result.getBranchId());
             userForm.setDepartmentId(result.getDepartmentId());
@@ -80,8 +89,8 @@ public class UserService {
     /*
      * レコード追加
      */
-    public void saveUser(UserForm reqUser) {
-        User saveUser = setUserEntity(reqUser);
+    public void saveUser(UserEditForm reqUser) {
+        User saveUser = setUserEditEntity(reqUser);
         userRepository.save(saveUser);
     }
 

@@ -67,7 +67,39 @@ public class UserEditController {
                 return new ModelAndView("redirect:/userEdit/{id}");
             }
         }
-        userEditForm.setId(id);
+        List<String> errorMessages = new ArrayList<>();
+        //パスワードと確認パスワードが違う場合
+        String password = userEditForm.getPassword();
+        String confirmPassword = userEditForm.getConfirmPassword();
+        if(!(password.equals(confirmPassword))) {
+            errorMessages.add("パスワードと確認用パスワードが一致しません");
+            //session.setAttribute("errorMessages", "パスワードと確認用パスワードが一致しません");
+            //return new ModelAndView("redirect:/userEdit/{id}");
+        }
+        //支社と部署の組み合わせが不正の時
+        if((userEditForm.getBranchId() == 1 && userEditForm.getDepartmentId() == 3)
+                || (userEditForm.getBranchId() == 1 && userEditForm.getDepartmentId() == 4)
+                || (userEditForm.getBranchId() == 2 && userEditForm.getDepartmentId() == 1)
+                || (userEditForm.getBranchId() == 2 && userEditForm.getDepartmentId() == 2)
+                || (userEditForm.getBranchId() == 3 && userEditForm.getDepartmentId() == 1)
+                || (userEditForm.getBranchId() == 3 && userEditForm.getDepartmentId() == 2)
+                || (userEditForm.getBranchId() == 4 && userEditForm.getDepartmentId() == 1)
+                || (userEditForm.getBranchId() == 4 && userEditForm.getDepartmentId() == 2)
+                || (userEditForm.getBranchId() == 5 && userEditForm.getDepartmentId() == 1)
+                || (userEditForm.getBranchId() == 5 && userEditForm.getDepartmentId() == 2)) {
+                    errorMessages.add("支社と部署の組み合わせが不正です");
+        }
+        if(!(errorMessages.isEmpty())){
+            session.setAttribute("errorMessages",errorMessages);
+            return new ModelAndView("redirect:/userEdit/{id}");
+        }
+
+        // ユーザー名の重複をチェック
+        if (userService.isAccountNameTaken(userEditForm.getAccount())) {
+            session.setAttribute("errorMessages","アカウント名が既に使用されています");
+            return new ModelAndView("redirect:/userEdit/{id}");
+        }
+
         userService.updateUser(userEditForm);
         return new ModelAndView("redirect:/userManage");
     }
