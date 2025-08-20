@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -24,15 +25,8 @@ public class Message implements Serializable {
 
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-//    @OneToMany(mappedBy="messages", cascade=CascadeType.ALL)
-//    private List<User> users;
-
-    // バージョン管理用フィールドを追加
-//    @Version
-//    private int version;
 
     @Column(name = "title")
     private String title;
@@ -51,4 +45,5 @@ public class Message implements Serializable {
 
     @Column(name = "updated_date", insertable = false, updatable = true)
     private Date updatedDate;
+
 }

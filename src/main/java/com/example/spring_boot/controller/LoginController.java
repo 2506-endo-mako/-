@@ -64,8 +64,7 @@ public class LoginController {
             return new ModelAndView("redirect:/");
         }
 
-        session.setAttribute("loginUser", user);
-        UserForm loginUser = (UserForm) session.getAttribute("loginUser");
+        session.setAttribute("loginUser", userForm);
         return new ModelAndView("redirect:/top");
     }
 
