@@ -116,8 +116,8 @@ public class TopController {
         }
 
         //セッションに登録されているユーザ情報から、ユーザID取得しmessageFormにセット
-        UserForm loginUser = (UserForm) session.getAttribute("loginUser");
-        messageForm.setUserId(loginUser.getId());
+//        UserForm loginUser = (UserForm) session.getAttribute("loginUser");
+//        messageForm.setUserId(loginUser.getId());
 
         // 投稿をテーブルに格納
         messageService.saveMessages(messageForm);

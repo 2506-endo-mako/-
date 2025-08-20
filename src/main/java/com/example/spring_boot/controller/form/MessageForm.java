@@ -14,7 +14,7 @@ import java.util.Date;
 public class MessageForm {
 
         @Column
-        private int id;
+        private Integer id;
 
         @NotBlank(message = "件名を入力してください")
         @Pattern(regexp = "[^\\u3000]*", message = "件名を入力してください")
