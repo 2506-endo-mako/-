@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -30,6 +31,8 @@ public class UserService {
         List<UserForm> users = setAllUser(results);
         return users;
     }
+
+
 
     /*
      * レコード1件取得処理
@@ -52,6 +55,7 @@ public class UserService {
             userForm.setId(result.getId());
             userForm.setAccount(result.getAccount());
             userForm.setPassword(result.getPassword());
+            //userForm.setConfirmPassword(result.getConfirmPassword());
             userForm.setName(result.getName());
             userForm.setBranchId(result.getBranchId());
             userForm.setDepartmentId(result.getDepartmentId());
@@ -80,8 +84,8 @@ public class UserService {
     /*
      * レコード追加
      */
-    public void saveUser(UserForm reqUser) {
-        User saveUser = setUserEntity(reqUser);
+    public void saveUser(UserEditForm reqUser) {
+        User saveUser = setUserEditEntity(reqUser);
         userRepository.save(saveUser);
     }
 
@@ -126,10 +130,25 @@ public class UserService {
     /*
      * 更新したusersテーブルのレコード追加
      */
-    public void updateUser(UserEditForm reqUser) {
-        User saveUser = setUserEditEntity(reqUser);
-        userRepository.save(saveUser);
+    public void updateUser(UserEditForm reqUser) throws Exception {
+        // 1. フォームから送られてきたアカウント名で、既存のレコードを検索する
+        Optional<User> existingUserOptional = userRepository.findByAccount(reqUser.getAccount());
+
+        // 2. 検索結果が存在する場合、重複チェックを行う
+        if (existingUserOptional.isPresent()) {
+            User existingUser = existingUserOptional.get();
+
+            // 3. 取得したレコードのIDが、更新対象のIDと一致するかどうかを比較する
+            //    IDが一致する場合、それは自分自身のレコードなので重複ではない
+            if (existingUser.getId() != (reqUser.getId())) {
+                // IDが一致しない場合、別のアカウントが同じアカウント名を持っているため重複エラー
+                throw new Exception("このアカウント名はすでに使用されています。");
+            }
+        User saveUsers = setUserEditEntity(reqUser);
+        userRepository.save(saveUsers);
+        }
     }
+
     /*
      * リクエストから取得した情報をEntityに設定
      */

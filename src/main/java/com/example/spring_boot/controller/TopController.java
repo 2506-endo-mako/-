@@ -96,6 +96,7 @@ public class TopController {
         return mav;
     }
 
+
     /*
      * 新規投稿処理
      */
@@ -117,6 +118,7 @@ public class TopController {
         //セッションに登録されているユーザ情報から、ユーザID取得しmessageFormにセット
         UserForm loginUser = (UserForm) session.getAttribute("loginUser");
         messageForm.setUserId(loginUser.getId());
+
         // 投稿をテーブルに格納
         messageService.saveMessages(messageForm);
         // rootへリダイレクト

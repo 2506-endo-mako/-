@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.security.auth.login.AccountException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +56,7 @@ public class UserEditController {
     @PutMapping("/userEditUpdate/{id}")
     public ModelAndView userEditUpdateContent(@PathVariable Integer id,
                                               @Validated @ModelAttribute("formModel") UserEditForm userEditForm,
-                                              BindingResult result) throws ParseException {
+                                              BindingResult result) throws Exception {
         //バリデーション
         if (result.hasErrors()) {
             List<String> errorMessages = new ArrayList<>();
@@ -67,8 +68,44 @@ public class UserEditController {
                 return new ModelAndView("redirect:/userEdit/{id}");
             }
         }
-        userEditForm.setId(id);
-        userService.updateUser(userEditForm);
+        List<String> errorMessages = new ArrayList<>();
+        //パスワードと確認パスワードが違う場合
+        String password = userEditForm.getPassword();
+        String confirmPassword = userEditForm.getConfirmPassword();
+        if(!(password.equals(confirmPassword))) {
+            errorMessages.add("パスワードと確認用パスワードが一致しません");
+            //session.setAttribute("errorMessages", "パスワードと確認用パスワードが一致しません");
+            //return new ModelAndView("redirect:/userEdit/{id}");
+        }
+        //支社と部署の組み合わせが不正の時
+        if((userEditForm.getBranchId() == 1 && userEditForm.getDepartmentId() == 3)
+                || (userEditForm.getBranchId() == 1 && userEditForm.getDepartmentId() == 4)
+                || (userEditForm.getBranchId() == 1 && userEditForm.getDepartmentId() == 5)
+                || (userEditForm.getBranchId() == 2 && userEditForm.getDepartmentId() == 3)
+                || (userEditForm.getBranchId() == 2 && userEditForm.getDepartmentId() == 4)
+                || (userEditForm.getBranchId() == 2 && userEditForm.getDepartmentId() == 5)
+                || (userEditForm.getBranchId() == 3 && userEditForm.getDepartmentId() == 1)
+                || (userEditForm.getBranchId() == 3 && userEditForm.getDepartmentId() == 2)
+                || (userEditForm.getBranchId() == 4 && userEditForm.getDepartmentId() == 1)
+                || (userEditForm.getBranchId() == 4 && userEditForm.getDepartmentId() == 2)
+                || (userEditForm.getBranchId() == 5 && userEditForm.getDepartmentId() == 1)
+                || (userEditForm.getBranchId() == 5 && userEditForm.getDepartmentId() == 2)) {
+                    errorMessages.add("支社と部署の組み合わせが不正です");
+        }
+        if(!(errorMessages.isEmpty())){
+            session.setAttribute("errorMessages",errorMessages);
+            return new ModelAndView("redirect:/userEdit/{id}");
+        }
+        //アカウント重複チェック
+        try {
+            // Serviceの更新メソッドを呼び出す
+            userService.updateUser(userEditForm);
+            } catch (Exception e) {
+                // Serviceから重複エラーがスローされた場合
+                session.setAttribute("errorMessages", e.getMessage());
+                return new ModelAndView("redirect:/userEdit/{id}");
+            }
+
         return new ModelAndView("redirect:/userManage");
     }
 }
