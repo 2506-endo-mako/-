@@ -32,6 +32,8 @@ public class LoginController {
         UserForm userForm = new UserForm();
         mav.setViewName("/login");
         mav.addObject("formModel", userForm);
+        mav.addObject("account",session.getAttribute("account"));
+        mav.addObject("password",session.getAttribute("password"));
         mav.addObject("errorMessages", session.getAttribute("errorMessages"));
         session.invalidate();
         return mav;
@@ -43,6 +45,10 @@ public class LoginController {
     @PostMapping("/login")
     public ModelAndView login(@Validated @ModelAttribute("formModel") UserForm userForm, BindingResult result) {
         ModelAndView mav = new ModelAndView();
+
+        mav.addObject("account",userForm.getAccount());
+        mav.addObject("password",userForm.getPassword());
+
         //バリデーション
         if (result.hasErrors()) {
             List<String> errorMessages = new ArrayList<>();
@@ -50,6 +56,8 @@ public class LoginController {
                 // ここでメッセージを取得する。
                 errorMessages.add(error.getDefaultMessage());
             }
+            session.setAttribute("account",userForm.getAccount());
+            session.setAttribute("password",userForm.getPassword());
             session.setAttribute("errorMessages", errorMessages);
             return new ModelAndView("redirect:/");
         }
@@ -59,6 +67,9 @@ public class LoginController {
         Optional<User> userOptional = userService.authenticateUser(account, password);
         if (userOptional.isPresent()) {
             // ログイン成功
+            session.setAttribute("account",userForm.getAccount());
+            session.setAttribute("password",userForm.getPassword());
+            session.setAttribute("departmentId", userForm.getDepartmentId());
             session.setAttribute("loginUser", userOptional.get()); // Userエンティティをセッションに保存
             return new ModelAndView("redirect:/top");
         } else {

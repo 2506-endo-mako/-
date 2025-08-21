@@ -31,7 +31,4 @@ public class Department {
     @Column(name = "updated_date", insertable = false, updatable = true)
     private Date updatedDate;
 
-//    @ManyToOne
-//    @JoinColumn(name="id")
-//    private User user;
 }

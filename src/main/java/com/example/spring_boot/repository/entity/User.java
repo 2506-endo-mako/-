@@ -20,13 +20,9 @@ import java.util.List;
 public class User implements Serializable {
 
     @Id
-    @Column(name = "id", insertable = true, updatable = false)
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-//    @ManyToOne
-//    @JoinColumn(name="message_id")
-//    private Message messages;
 
     @Column(name = "account")
     private String account;
@@ -37,11 +33,11 @@ public class User implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "branch_id", insertable = true, updatable = true)
-    private Integer branchId;
-
-    @Column(name = "department_id", insertable = true, updatable = true)
+    @Column(name = "department_id", insertable = false, updatable = false)
     private Integer departmentId;
+
+    @Column(name = "branch_id", insertable = false, updatable = false)
+    private Integer branchId;
 
     @Column(name = "is_stopped")
     private Integer isStopped;
@@ -52,8 +48,12 @@ public class User implements Serializable {
     @Column(name = "updated_date", insertable = false, updatable = true)
     private Date updatedDate;
 
-//    @OneToMany(mappedBy="user", cascade=CascadeType.ALL)
-//    private List<Branch> branches;
-//    private List<Department> departments;
+    // ★リレーションシップはそのまま残します
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id")
+    private Department department;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "branch_id")
+    private Branch branch;
 }
