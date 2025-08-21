@@ -38,10 +38,9 @@ public class SignUpController {
         // 準備した空のFormを保管
         mav.addObject("formModel", userEditForm);
         mav.addObject("errorMessages", session.getAttribute("errorMessages"));
-        session.invalidate();
+        //session.invalidate();
         return mav;
     }
-
 
     /*
      * 新規ユーザー登録処理
