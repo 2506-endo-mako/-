@@ -15,9 +15,9 @@
     <form method="post" action="/login" th:object="${formModel}">
         <div class="form-area">
             <label>アカウント名</label>
-            <input th:name="account" type="text" th:field="*{account}" />
+            <input th:name="account" type="text" th:field="*{account}" th:value="${account}"/>
             <label>パスワード</label>
-            <input th:name="password" type="password" th:field="*{password}"/>
+            <input th:name="password" type="text" th:field="*{password}" th:value="${password}"/>
             <input type="submit" value="ログイン"/>
         </div>
     </form>

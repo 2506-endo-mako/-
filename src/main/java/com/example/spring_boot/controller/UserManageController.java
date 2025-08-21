@@ -1,7 +1,8 @@
 package com.example.spring_boot.controller;
 
-import com.example.spring_boot.controller.form.MessageForm;
 import com.example.spring_boot.controller.form.UserForm;
+//import com.example.spring_boot.dto.UserWithDetailsDto;
+import com.example.spring_boot.repository.UserRepository;
 import com.example.spring_boot.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ public class UserManageController {
     UserService userService;
     @Autowired
     HttpSession session;
+    @Autowired
+    UserRepository userRepository;
 
     /*
      * ユーザー管理画面表示処理
@@ -39,6 +42,12 @@ public class UserManageController {
         // 準備した空のFormを保管
         mav.addObject("formModel", userForm);
         mav.addObject("errorMessages", session.getAttribute("errorMessages"));
+
+//        // リポジトリから結合されたデータを取得
+//        List<UserWithDetailsDto> users = userRepository.findAllUsersWithDetails();
+//        // データをビューに渡す
+//        mav.addObject("users", users);
+
         //session.invalidate();
         return mav;
     }

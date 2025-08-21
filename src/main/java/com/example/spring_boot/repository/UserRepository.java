@@ -1,5 +1,6 @@
 package com.example.spring_boot.repository;
 
+//import com.example.spring_boot.dto.UserWithDetailsDto;
 import com.example.spring_boot.repository.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -14,6 +15,16 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Integer> {
     public List<User> findAll();
     public Optional<User> findByAccount(String account);
+
+//    //内部結合処理（ユーザー管理画面表示）
+//    @Query("SELECT new com.example.spring_boot.dto.UserWithDetailsDto(" +
+//            "u.id, u.account, u.name as userName, u.departmentId, u.branchId, u.isStopped, " +
+//            "d.name as departmentName, b.name as branchName) " +
+//            "FROM User u " +
+//            "INNER JOIN u.department d " +
+//            "INNER JOIN u.branch b")
+//    List<UserWithDetailsDto> findAllUsersWithDetails();
+
 
     //ステータスの変更処理
     @Modifying
