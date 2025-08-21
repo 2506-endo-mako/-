@@ -98,8 +98,8 @@ public class SignUpController {
             return new ModelAndView("redirect:/signUp");
         }
 
-        //userService.saveUser(userEditForm);
-        userService.registerUser(userEditForm.getAccount(), userEditForm.getPassword());
+        userService.saveUser(userEditForm);
+        //userService.registerUser(userEditForm.getAccount(), userEditForm.getPassword());
         return new ModelAndView("redirect:/userManage");
     }
 }

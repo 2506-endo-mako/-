@@ -66,11 +66,13 @@ public class LoginController {
         // UserServiceのauthenticateUserメソッドを呼び出す
         Optional<User> userOptional = userService.authenticateUser(account, password);
         if (userOptional.isPresent()) {
+            // OptionalからUserオブジェクトを取り出す
+            User user = userOptional.get();
             // ログイン成功
-            session.setAttribute("account",userForm.getAccount());
-            session.setAttribute("password",userForm.getPassword());
-            session.setAttribute("departmentId", userForm.getDepartmentId());
-            session.setAttribute("loginUser", userOptional.get()); // Userエンティティをセッションに保存
+            session.setAttribute("account", user.getAccount());
+            session.setAttribute("password", user.getPassword());
+            session.setAttribute("departmentId", user.getDepartmentId());
+            session.setAttribute("loginUser", user);  // Userエンティティをセッションに保存
             return new ModelAndView("redirect:/top");
         } else {
             // ログイン失敗

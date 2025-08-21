@@ -35,8 +35,6 @@ public class UserService {
         return users;
     }
 
-
-
     /*
      * レコード1件取得処理
      */
