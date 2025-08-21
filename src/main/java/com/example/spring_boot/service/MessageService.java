@@ -52,7 +52,7 @@ public class MessageService {
         List<Message> results = null;
 
         if(category.equals("%null%")){
-            results = messageRepository.findByCreatedDateBetweenOrderByCreatedDateAsc(start,end);
+            results = messageRepository.findByCreatedDateBetweenOrderByCreatedDateDesc(start,end);
         } else {
             //メソッドを変える完全一致　部分一致に変える
             results = messageRepository.findByCreatedDateBetweenAndCategoryLikeOrderByCreatedDateAsc(start,end,category);

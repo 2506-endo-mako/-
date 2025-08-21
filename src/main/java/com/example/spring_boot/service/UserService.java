@@ -7,6 +7,7 @@ import com.example.spring_boot.repository.entity.Branch;
 import com.example.spring_boot.repository.entity.Department;
 import com.example.spring_boot.repository.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,8 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /*
      * ユーザーのレコード全件取得処理
@@ -31,8 +34,6 @@ public class UserService {
         List<UserForm> users = setAllUser(results);
         return users;
     }
-
-
 
     /*
      * レコード1件取得処理
@@ -69,16 +70,30 @@ public class UserService {
         return users;
     }
 
-    /*
-     * ログイン情報を1件取得
-     */
-    public User selectUser(String account, String password) {
-        List<User> users = userRepository.findByAccountAndPassword(account, password);
-        //String encPassword = CipherUtil.encrypt(password);
-        if (users.isEmpty()) {
-            return null;
+    // ユーザー登録メソッド
+    public User registerUser(String account, String rawPassword) {
+        String hashedPassword = passwordEncoder.encode(rawPassword);
+        User user = new User();
+        user.setAccount(account);
+        user.setPassword(hashedPassword);
+        return userRepository.save(user);
+    }
+
+    // ログイン処理に使用するメソッド
+    public Optional<User> authenticateUser(String account, String rawPassword) {
+        // 1. アカウント名でユーザーを検索
+        Optional<User> userOptional = userRepository.findByAccount(account);
+
+        // ユーザーが存在する場合、パスワードを照合
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            // 2. パスワードを照合
+            if (passwordEncoder.matches(rawPassword, user.getPassword())) {
+                return Optional.of(user);
+            }
         }
-        return users.get(0);
+        // ユーザーが見つからない、またはパスワードが一致しない場合はOptional.empty()を返す
+        return Optional.empty();
     }
 
     /*

@@ -3,7 +3,6 @@ package com.example.spring_boot.controller;
 import com.example.spring_boot.controller.form.UserForm;
 import com.example.spring_boot.repository.entity.User;
 import com.example.spring_boot.service.UserService;
-import com.example.spring_boot.util.PasswordHashEncode;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class LoginController {
@@ -49,6 +49,9 @@ public class LoginController {
     public ModelAndView login(@Validated @ModelAttribute("formModel") UserForm userForm, BindingResult result) {
         ModelAndView mav = new ModelAndView();
 
+        mav.addObject("account",userForm.getAccount());
+        mav.addObject("password",userForm.getPassword());
+
         //バリデーション
         if (result.hasErrors()) {
             List<String> errorMessages = new ArrayList<>();
@@ -56,25 +59,30 @@ public class LoginController {
                 // ここでメッセージを取得する。
                 errorMessages.add(error.getDefaultMessage());
             }
-            session.setAttribute("formModel", userForm.getPassword());
+            session.setAttribute("account",userForm.getAccount());
+            session.setAttribute("password",userForm.getPassword());
             session.setAttribute("errorMessages", errorMessages);
             return new ModelAndView("redirect:/");
         }
         String account = userForm.getAccount();
         String password = userForm.getPassword();
-        //パスワード暗号化
-        //String encPassword = PasswordHashEncode.encode(password);
-        User user = userService.selectUser(account, password);
-        if (user == null) {
+        // UserServiceのauthenticateUserメソッドを呼び出す
+        Optional<User> userOptional = userService.authenticateUser(account, password);
+        if (userOptional.isPresent()) {
+            // OptionalからUserオブジェクトを取り出す
+            User user = userOptional.get();
+            // ログイン成功
+            session.setAttribute("account", user.getAccount());
+            session.setAttribute("password", user.getPassword());
+            session.setAttribute("departmentId", user.getDepartmentId());
+            session.setAttribute("loginUser", user);  // Userエンティティをセッションに保存
+            return new ModelAndView("redirect:/top");
+        } else {
+            // ログイン失敗
             session.setAttribute("userForm", userForm);
             session.setAttribute("errorMessages", "ログインに失敗しました");
             return new ModelAndView("redirect:/");
         }
-
-        session.setAttribute("loginUser", userForm);
-        session.setAttribute("departmentId", user.getDepartmentId());
-        UserForm loginUser = (UserForm) session.getAttribute("loginUser");
-        return new ModelAndView("redirect:/top");
 
     }
 
