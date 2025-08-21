@@ -4,6 +4,7 @@ import com.example.spring_boot.controller.form.CommentForm;
 import com.example.spring_boot.controller.form.MessageForm;
 import com.example.spring_boot.controller.form.UserForm;
 import com.example.spring_boot.repository.MessageRepository;
+import com.example.spring_boot.repository.entity.User;
 import com.example.spring_boot.service.CommentService;
 import com.example.spring_boot.service.MessageService;
 import com.example.spring_boot.service.UserService;
@@ -47,7 +48,7 @@ public class TopController {
 
         ModelAndView mav = new ModelAndView();
         //セッションから取得
-        UserForm loginUser = (UserForm) session.getAttribute("loginUser");
+        User loginUser = (User) session.getAttribute("loginUser");
         // messagesテーブルの情報を全件取得
         List<MessageForm> contentData = messageService.findAllMessages(startDate, endDate, "%" + category + "%");
         // 画面遷移先を指定

@@ -3,7 +3,6 @@ package com.example.spring_boot.controller;
 import com.example.spring_boot.controller.form.UserForm;
 import com.example.spring_boot.repository.entity.User;
 import com.example.spring_boot.service.UserService;
-import com.example.spring_boot.util.PasswordHashEncode;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class LoginController {
@@ -55,18 +55,17 @@ public class LoginController {
         }
         String account = userForm.getAccount();
         String password = userForm.getPassword();
-        //パスワード暗号化
-        //String encPassword = PasswordHashEncode.encode(password);
-        User user = userService.selectUser(account, password);
-
-        if (user == null) {
+        // UserServiceのauthenticateUserメソッドを呼び出す
+        Optional<User> userOptional = userService.authenticateUser(account, password);
+        if (userOptional.isPresent()) {
+            // ログイン成功
+            session.setAttribute("loginUser", userOptional.get()); // Userエンティティをセッションに保存
+            return new ModelAndView("redirect:/top");
+        } else {
+            // ログイン失敗
             session.setAttribute("errorMessages", "ログインに失敗しました");
             return new ModelAndView("redirect:/");
         }
-
-        session.setAttribute("loginUser", userForm);
-        UserForm loginUser = (UserForm) session.getAttribute("loginUser");
-        return new ModelAndView("redirect:/top");
     }
 
     /*
