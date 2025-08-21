@@ -29,12 +29,15 @@ public class LoginController {
     @GetMapping
     public ModelAndView newContent() {
         ModelAndView mav = new ModelAndView();
-        UserForm userForm = new UserForm();
         mav.setViewName("/login");
-        mav.addObject("formModel", userForm);
-        mav.addObject("account",session.getAttribute("account"));
-        mav.addObject("password",session.getAttribute("password"));
+        UserForm userForm = (UserForm) session.getAttribute("userForm");
+            if(userForm == null) {
+                userForm = new UserForm();
+            }
+
+            mav.addObject("formModel", userForm);
         mav.addObject("errorMessages", session.getAttribute("errorMessages"));
+
         session.invalidate();
         return mav;
     }
@@ -76,9 +79,11 @@ public class LoginController {
             return new ModelAndView("redirect:/top");
         } else {
             // ログイン失敗
+            session.setAttribute("userForm", userForm);
             session.setAttribute("errorMessages", "ログインに失敗しました");
             return new ModelAndView("redirect:/");
         }
+
     }
 
     /*
