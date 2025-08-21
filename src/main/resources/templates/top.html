@@ -28,9 +28,11 @@
     </a>
 
     <!--ユーザ管理-->
-    <a href="/userManage">
-        <button class="userManage-button" type="button">ユーザ管理</button>
-    </a>
+    <div th:if="${department}">
+        <a href="/userManage">
+            <button class="userManage-button" type="button">ユーザ管理</button>
+        </a>
+    </div>
 
     <form th:method="get" action="/top">
         <div class="form-area">
