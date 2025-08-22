@@ -38,7 +38,7 @@ public class LoginController {
             mav.addObject("formModel", userForm);
         mav.addObject("errorMessages", session.getAttribute("errorMessages"));
 
-        session.invalidate();
+        session.removeAttribute("errorMessages");
         return mav;
     }
 

@@ -16,7 +16,7 @@ public class CommentForm {
 
     @Column
     @NotBlank(message = "・メッセージを入力してください")
-    @Size(max = 500, message = "・タスクは500文字以内で入力してください")
+    @Size(max = 500, message = "本文は500文字以下で入力してください")
     private String text;
 
     @Column(name = "user_id")

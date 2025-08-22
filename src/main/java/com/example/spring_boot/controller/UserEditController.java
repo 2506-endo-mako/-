@@ -16,6 +16,7 @@ import javax.security.auth.login.AccountException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class UserEditController {
@@ -27,17 +28,20 @@ public class UserEditController {
     /*
      *ユーザー編集画面表示
      */
-    @GetMapping("/userEdit/{id}")
+    @GetMapping(value={"/userEdit/", "/userEdit/{id}"})
     //@ResponseBody
-    public ModelAndView editContent(@PathVariable(required = false) Integer id) {
-        //List<String> errorMessages = new ArrayList<>();
+    public ModelAndView editContent(@PathVariable(required = false) Optional<String> id) {
+
+        String Id = id.orElse(null);
+
+        if (!Id.matches("^[0-9]*$") || Id.equals(null)) {
+            session.setAttribute("errorMessages", "不正なパラメータです");
+            return new ModelAndView("redirect:/userManage");
+        }
+
         ModelAndView mav = new ModelAndView();
         //編集するユーザー情報を取得
-        UserForm user = userService.editUser(id);
-        if (user == null) {
-            session.setAttribute("errorMessages", "・不正なパラメータです");
-            return new ModelAndView("redirect:/top");
-        }
+        UserForm user = userService.editUser(Integer.valueOf(Id));
 
         mav.setViewName("/userEdit");
         // 編集内容を保管
@@ -45,7 +49,7 @@ public class UserEditController {
         mav.addObject("errorMessages",session.getAttribute("errorMessages"));
         //エラー表示
 //        setErrorMessage(mav);
-        session.invalidate();
+        session.removeAttribute("errorMessages");
         return mav;
     }
 

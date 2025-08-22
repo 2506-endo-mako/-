@@ -63,6 +63,9 @@ public class TopController {
         List<UserForm> userData = userService.findAllUser();
         // 画面遷移先を指定
         mav.setViewName("/top");
+        //空の箱を準備
+        MessageForm messageForm = new MessageForm();
+        mav.addObject("formModel", messageForm);
         // 投稿データオブジェクトを保管
         mav.addObject("userData", userData);
 
@@ -74,11 +77,11 @@ public class TopController {
         // コメント返信オブジェクトを保管
         mav.addObject("commentData", commentData);
         mav.addObject("MessageId", session.getAttribute("MessageId"));
-        mav.addObject("errorMessages", session.getAttribute("commentErrorMessage"));
+        mav.addObject("commentErrorMessage", session.getAttribute("commentErrorMessage"));
         mav.addObject("errorMessages", session.getAttribute("errorMessages"));
         //コメント返信用に空のcommentFormを準備
-        mav.addObject("formModel", new CommentForm());
-        //session.invalidate();
+
+        session.removeAttribute("errorMessages");
         return mav;
     }
 
@@ -88,12 +91,14 @@ public class TopController {
     @GetMapping("/new")
     public ModelAndView newContent() {
         ModelAndView mav = new ModelAndView();
-        // form用の空のentityを準備
-        MessageForm messagesForm = new MessageForm();
         // 画面遷移先を指定
         mav.setViewName("/new");
         // 準備した空のFormを保管
-        mav.addObject("formModel", messagesForm);
+        MessageForm messageForm = (MessageForm) session.getAttribute("messageForm");
+        if(messageForm == null) {
+            messageForm = new MessageForm();
+        }
+        mav.addObject("formModel", messageForm);
         return mav;
     }
 
@@ -112,6 +117,7 @@ public class TopController {
                 // ここでメッセージを取得する。
                 errorMessages.add(error.getDefaultMessage());
             }
+            session.setAttribute("messageForm",messageForm);
             redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
             return new ModelAndView("redirect:/new");
         }
@@ -137,7 +143,7 @@ public class TopController {
                 String commentErrorMessage = error.getDefaultMessage();
 
                 ModelAndView mav = new ModelAndView();
-                //MessgeIdはメッセージとコメントの紐づけのため直接送るcommentsテーブルのmessageId
+                //MessageIdはメッセージとコメントの紐づけのため直接送るcommentsテーブルのmessageId
                 int MessageId = commentForm.getMessageId();
                 session.setAttribute("MessageId", MessageId);
                 session.setAttribute("commentErrorMessage", commentErrorMessage);

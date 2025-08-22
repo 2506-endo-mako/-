@@ -48,7 +48,7 @@ public class UserManageController {
 //        // データをビューに渡す
 //        mav.addObject("users", users);
 
-        //session.invalidate();
+        session.removeAttribute("errorMessages");
         return mav;
     }
 

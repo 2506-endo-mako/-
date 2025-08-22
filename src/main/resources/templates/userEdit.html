@@ -1,49 +1,38 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-  <meta charset="UTF-8">
-  <link th:href="@{/css/style.css}" rel="styleSheet">
-  <title>ユーザー編集</title>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/style.css}" rel="styleSheet">
+    <title>ユーザー編集</title>
 </head>
 <body>
 <div class="header-contents">
-  <h2>ユーザー編集</h2>
+    <h2>ユーザー編集</h2>
 
-  <!--エラーメッセージ -->
-  <div class="errorMessages" th:each="errorMessages : ${errorMessages}">
-    <li><span th:text="${errorMessages}"/></li>
-  </div>
-  <form th:method="put" th:action="@{/userEditUpdate/{id}(id=${formModel.id})}" th:object="${formModel}">
-    <div class="form-area">
-      <label>アカウント名</label>
-     <div>
-      <input th:name="account" type="text" th:field="*{account}"/>
-       <input th:type="hidden" th:name="id" th:field="*{id}">
-     </div>
-       <label>パスワード</label>
-      <input th:name="password" type="text" th:field="*{password}"/>
-      <label>確認用パスワード</label>
-      <input th:name="confirmPassword" type="text"/>
-      <label>名前</label>
-      <input th:name="name" type="text" th:field="*{name}"/>
-      <label>支社ID</label>
-      <select th:name="branchId" type="branchId" th:field="*{branchId}" >
-        <option value="1" th:selected="${status == 1}">1</option>
-        <option value="2" th:selected="${status == 2}">2</option>
-        <option value="3" th:selected="${status == 3}">3</option>
-        <option value="4" th:selected="${status == 4}">4</option>
-        <option value="5" th:selected="${status == 5}">5</option>
-      </select>
-      <label>部署ID</label>
-      <select th:name="departmentId" type="departmentId" th:field="*{departmentId}"/>
-      <option value="1" th:selected="${status == 1}">1</option>
-      <option value="2" th:selected="${status == 2}">2</option>
-      <option value="3" th:selected="${status == 3}">3</option>
-      <option value="4" th:selected="${status == 4}">4</option>
-      </select></br>
-      <input type="submit" value="更新"/>
+    <!--エラーメッセージ -->
+    <div class="errorMessages" th:each="errorMessages : ${errorMessages}">
+        <li><span th:text="${errorMessages}"/></li>
     </div>
-  </form>
+    <form th:method="put" th:action="@{/userEditUpdate/{id}(id=${formModel.id})}" th:object="${formModel}">
+        <div class="form-area">
+            <label>アカウント名</label>
+            <div>
+                <input th:name="account" type="text" th:field="*{account}"/>
+                <input th:type="hidden" th:name="id" th:field="*{id}">
+            </div>
+            <!--       <label>パスワード</label>-->
+            <!--      <input th:name="password" type="text" th:field="*{password}"/>-->
+            <!--      <label>確認用パスワード</label>-->
+            <!--      <input th:name="confirmPassword" type="text"/>-->
+            <label>名前</label>
+            <input th:name="name" type="text" th:field="*{name}"/>
+            <label>支社ID</label>
+            <span th:name="branchId" type="branchId" th:text="*{branchId}"/>
+            <label>部署ID</label>
+            <span th:name="departmentId" type="departmentId" th:text="*{departmentId}"/></br>
+            <input type="submit" value="更新"/>
+        </div>
+    </form>
 </div>
 </body>
 </html>
