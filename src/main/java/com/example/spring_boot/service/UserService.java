@@ -217,6 +217,8 @@ public class UserService {
         user.setAccount(reqUser.getAccount());
         user.setPassword(reqUser.getPassword());
         user.setName(reqUser.getName());
+        user.setBranchId(reqUser.getBranchId());
+        user.setDepartmentId(reqUser.getDepartmentId());
         if(reqUser.getIsStopped() == null) {
             user.setIsStopped(0);
         } else {
