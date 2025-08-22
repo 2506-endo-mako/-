@@ -157,7 +157,7 @@ public class UserService {
             //    IDが一致する場合、それは自分自身のレコードなので重複ではない
             if (existingUser.getId() != (reqUser.getId())) {
                 // IDが一致しない場合、別のアカウントが同じアカウント名を持っているため重複エラー
-                throw new Exception("このアカウント名はすでに使用されています。");
+                throw new Exception("アカウントが重複しています");
             }
         User saveUsers = setUserEditEntity(reqUser);
         userRepository.save(saveUsers);
