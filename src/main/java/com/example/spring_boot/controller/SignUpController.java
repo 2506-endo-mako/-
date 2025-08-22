@@ -46,7 +46,6 @@ public class SignUpController {
         return mav;
     }
 
-
     /*
      * 新規ユーザー登録処理
      */

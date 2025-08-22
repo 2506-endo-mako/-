@@ -101,6 +101,7 @@ public class MessageService {
         messages.setText(reqMessages.getText());
         messages.setCategory(reqMessages.getCategory());
         messages.setUserId(reqMessages.getUserId());
+        messages.setUserId(reqMessages.getUserId());
         messages.setCreatedDate(reqMessages.getCreatedDate());
         messages.setUpdatedDate(reqMessages.getUpdatedDate());
         return messages;

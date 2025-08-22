@@ -11,14 +11,14 @@
 </div>
 
 <!--エラーメッセージ -->
-<div class="errorMessages" >
+<div class="errorMessages">
     <span th:text="${errorMessages}"/>
 </div>
-    <!--ログアウト-->
-    <div class="logout-button">
-        <a href="/logout">
-            <button type="button">ログアウト</button>
-        </a>
+<!--ログアウト-->
+<div class="logout-button">
+    <a href="/logout">
+        <button type="button">ログアウト</button>
+    </a>
 
 </div>
 <div class="main-contents">
@@ -62,26 +62,27 @@
                 カテゴリー : <span th:text="${contentData.category}"/>
             </div>
 
-            <!--usersテーブルのアカウント名と名前-->
-            <div class="tasks" th:each="userData : ${userData}">
-                <div th:if="${userData.id == contentData.userId}">
-                    <div class="text">
-                        アカウント名 : <span th:text="${userData.account}"/>
-                    </div>
-                    <div class="text">
-                        名前 : <span th:text="${userData.name}"/>
-                    </div>
+        <!--usersテーブルのアカウント名と名前-->
+        <div class="tasks" th:each="userData : ${userData}">
+            <div th:if="${userData.id == contentData.userId}">
+                <div class="text">
+                    アカウント名 : <span th:text="${userData.account}"/>
+                </div>
+                <div class="text">
+                    名前 : <span th:text="${userData.name}"/>
                 </div>
             </div>
+        </div>
 
-            <!--削除ボタン-->
-            <div class="delete-button">
-                <form th:action="@{/delete/{id}(id=${contentData.id})}" th:method="delete">
-                    <div>
-                        <input class="confirm-action-btn" type="submit" value="削除">
-                    </div>
-                </form>
-            </div>
+        <!--削除ボタン-->
+        <div class="delete-button">
+            <form th:if="${loginUser != null and loginUser.id == contentData.userId}"
+                  th:action="@{/delete/{id}(id=${contentData.id})}" th:method="delete">
+                <div>
+                    <input class="confirm-action-btn" type="submit" value="削除">
+                </div>
+            </form>
+        </div>
 
             <!--コメント返信投稿-->
             <form method="post" action="/commentAdd" th:object="${formModel}">
@@ -98,8 +99,8 @@
                 </div>
             </form>
 
-            <!--コメント返信表示処理-->
-            <div class="message-icon" th:each="commentData : ${commentData}">
+        <!--コメント返信表示処理-->
+        <div class="message-icon" th:each="commentData : ${commentData}">
 
                 <div th:if="${contentData.id == commentData.messageId}">
                     <div class="text">
@@ -109,15 +110,17 @@
                         作成日時 : <span th:text="${commentData.createdDate}"/>
                     </div>
                     <div class="delete-button">
-                        <form th:action="@{/commentDelete/{id}(id=${commentData.id})}" th:method="delete">
+                        <form th:if="${loginUser != null and loginUser.id == commentData.userId}"
+                              th:action="@{/commentDelete/{id}(id=${commentData.id})}" th:method="delete">
                             <input class=confirm-action-btn type="submit" value="削除">
                         </form>
                     </div>
                 </div>
             </div>
             <br/>
-        </div>
+        <br/>
     </div>
+
     <script>
         //★削除ボタンへのダイアログ機能
         // 'confirm-action-btn' クラスを持つすべての要素を取得
