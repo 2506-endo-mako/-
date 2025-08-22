@@ -15,9 +15,9 @@ public class Application {
 	@Bean
 	public CommandLineRunner runner(PasswordEncoder passwordEncoder) {
 		return args -> {
-			String rawPassword = "007272";
+			String rawPassword = "2222";
 			String encodedPassword = passwordEncoder.encode(rawPassword);
-			System.out.println("007272 のハッシュ値: " + encodedPassword);
+			System.out.println("2222 のハッシュ値: " + encodedPassword);
 			System.out.println("（注意: このハッシュ値は毎回変わります）");
 		};
 	}

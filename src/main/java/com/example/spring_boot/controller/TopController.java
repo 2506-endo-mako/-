@@ -78,7 +78,6 @@ public class TopController {
         mav.addObject("errorMessages", session.getAttribute("errorMessages"));
         //コメント返信用に空のcommentFormを準備
         mav.addObject("formModel", new CommentForm());
-        //session.invalidate();
         return mav;
     }
 
@@ -117,8 +116,8 @@ public class TopController {
         }
 
         //セッションに登録されているユーザ情報から、ユーザID取得しmessageFormにセット
-//        UserForm loginUser = (UserForm) session.getAttribute("loginUser");
-//        messageForm.setUserId(loginUser.getId());
+        User loginUser = (User) session.getAttribute("loginUser");
+        messageForm.setUserId(loginUser.getId());
 
         // 投稿をテーブルに格納
         messageService.saveMessages(messageForm);
@@ -145,6 +144,9 @@ public class TopController {
                 return new ModelAndView("redirect:/top");
             }
         }
+        //セッションに登録されているユーザ情報から、ユーザID取得しcommentFormにセット
+        User loginUser = (User) session.getAttribute("loginUser");
+        commentForm.setUserId(loginUser.getId());
         // 投稿をテーブルに格納
         commentService.saveComment(commentForm);
         // rootへリダイレクト

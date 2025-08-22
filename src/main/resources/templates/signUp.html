@@ -24,18 +24,18 @@
             <input th:name="name" type="name" th:field="*{name}"/>
             <label>支社ID</label>
             <select th:name="branchId" type="branchId" th:field="*{branchId}" >
-                <option value="1" th:selected="${status == 1}">1</option>
-                <option value="2" th:selected="${status == 2}">2</option>
-                <option value="3" th:selected="${status == 3}">3</option>
-                <option value="4" th:selected="${status == 4}">4</option>
-                <option value="5" th:selected="${status == 5}">5</option>
+                <option value="1" th:selected="${status == 1}">本社</option>
+                <option value="2" th:selected="${status == 2}">A支社</option>
+                <option value="3" th:selected="${status == 3}">B支社</option>
+                <option value="4" th:selected="${status == 4}">C支社</option>
+                <option value="5" th:selected="${status == 5}">D支社</option>
             </select>
             <label>部署ID</label>
             <select th:name="departmentId" type="departmentId" th:field="*{departmentId}"/>
-                <option value="1" th:selected="${status == 1}">1</option>
-                <option value="2" th:selected="${status == 2}">2</option>
-                <option value="3" th:selected="${status == 3}">3</option>
-                <option value="4" th:selected="${status == 4}">4</option>
+                <option value="1" th:selected="${status == 1}">総務人事部</option>
+                <option value="2" th:selected="${status == 2}">情報管理部</option>
+                <option value="3" th:selected="${status == 3}">営業部</option>
+                <option value="4" th:selected="${status == 4}">技術部</option>
             </select></br>
             <input type="submit" value="登録"/>
         </div>

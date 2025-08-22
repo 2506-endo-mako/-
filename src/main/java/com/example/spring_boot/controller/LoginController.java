@@ -68,7 +68,7 @@ public class LoginController {
         String password = userForm.getPassword();
         // UserServiceのauthenticateUserメソッドを呼び出す
         Optional<User> userOptional = userService.authenticateUser(account, password);
-        if (userOptional.isPresent()) {
+        if (userOptional.isPresent() && userOptional.get().getIsStopped() == 0) {
             // OptionalからUserオブジェクトを取り出す
             User user = userOptional.get();
             // ログイン成功
@@ -83,7 +83,6 @@ public class LoginController {
             session.setAttribute("errorMessages", "ログインに失敗しました");
             return new ModelAndView("redirect:/");
         }
-
     }
 
     /*
