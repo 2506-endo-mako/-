@@ -2,6 +2,7 @@ package com.example.spring_boot.controller;
 
 import com.example.spring_boot.controller.form.UserEditForm;
 import com.example.spring_boot.controller.form.UserForm;
+import com.example.spring_boot.repository.entity.User;
 import com.example.spring_boot.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +48,11 @@ public class UserEditController {
             session.setAttribute("errorMessages", "不正なパラメータが入力されました");
             return new ModelAndView("redirect:/userManage");
         }
+        User loginUser = (User) session.getAttribute("loginUser");
         mav.setViewName("/userEdit");
         // 編集内容を保管
         mav.addObject("formModel", user);
+        mav.addObject("loginUser",loginUser);
         mav.addObject("errorMessages",session.getAttribute("errorMessages"));
         //エラー表示
 //        setErrorMessage(mav);

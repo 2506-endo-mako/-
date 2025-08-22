@@ -20,17 +20,38 @@
                 <input th:name="account" type="text" th:field="*{account}"/>
                 <input th:type="hidden" th:name="id" th:field="*{id}">
             </div>
-                   <label>パスワード</label>
-                  <input th:name="password" type="password" th:field="*{password}"/>
-                  <label>確認用パスワード</label>
-                  <input th:name="confirmPassword" type="password"/>
+            <label>パスワード</label>
+            <input th:name="password" type="password" th:field="*{password}"/>
+            <label>確認用パスワード</label>
+            <input th:name="confirmPassword" type="password"/>
             <label>名前</label>
             <input th:name="name" type="text" th:field="*{name}"/>
-            <label>支社ID</label>
-            <span th:name="branchId" type="branchId" th:text="*{branchId}"/>
-            <label>部署ID</label>
-            <span th:name="departmentId" type="departmentId" th:text="*{departmentId}"/></br>
-            <input type="submit" value="更新"/>
+            <div th:each="loginUser : ${loginUser}">
+                <div th:if="${loginUser.id == formModel.id}">
+                    <label>支社ID</label>
+                    <span th:name="branchId" type="branchId" th:text="*{branchId}"/>
+                    <label>部署ID</label>
+                    <span th:name="departmentId" type="departmentId" th:text="*{departmentId}"/>
+                </div>
+                <div th:if="${loginUser.id != formModel.id}">
+                    <label>支社ID</label>
+                    <select th:name="branchId" type="branchId" th:field="*{branchId}">
+                        <option value="1" th:selected="${status == 1}">本社</option>
+                        <option value="2" th:selected="${status == 2}">A支社</option>
+                        <option value="3" th:selected="${status == 3}">B支社</option>
+                        <option value="4" th:selected="${status == 4}">C支社</option>
+                        <option value="5" th:selected="${status == 5}">D支社</option>
+                    </select>
+                    <label>部署ID</label>
+                    <select th:name="departmentId" type="departmentId" th:field="*{departmentId}"/>
+                    <option value="1" th:selected="${status == 1}">総務人事部</option>
+                    <option value="2" th:selected="${status == 2}">情報管理部</option>
+                    <option value="3" th:selected="${status == 3}">営業部</option>
+                    <option value="4" th:selected="${status == 4}">技術部</option>
+                    </select></br>
+                    <input type="submit" value="更新"/>
+                </div>
+            </div>
         </div>
     </form>
 </div>
