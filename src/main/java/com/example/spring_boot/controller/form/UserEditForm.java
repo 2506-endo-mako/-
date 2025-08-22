@@ -23,13 +23,11 @@ public class UserEditForm {
     @Column
     @NotBlank(message = "アカウントを入力してください")
     /* 配列要素重複チェック */
-    @Size(min = 6,max = 20, message = "アカウントは半角英数字かつ6文字以上20文字以下で入力してください")
-    @Pattern(regexp = "[a-zA-Z0-9]+", message = "アカウントは半角英数字かつ6文字以上20文字以下で入力してください")
+    @Pattern(regexp = "[a-zA-Z0-9]{6,20}+", message = "アカウントは半角英数字かつ6文字以上20文字以下で入力してください")
     private String account;
 
     @NotBlank(message = "パスワードを入力してください")
-    @Pattern(regexp = "[a-zA-Z0-9]+.*", message = "パスワードは半角文字かつ6文字以上20文字以下で入力してください")
-    @Size(min = 6,max = 20, message = "パスワードは半角文字かつ6文字以上20文字以下で入力してください")
+    @Pattern(regexp = "[a-zA-Z0-9]{6,20}+.*", message = "パスワードは半角文字かつ6文字以上20文字以下で入力してください")
     private String password;
 
     @Column
