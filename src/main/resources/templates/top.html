@@ -28,11 +28,13 @@
     </a>
 
     <!--ユーザ管理-->
-    <!--    <div th:if="${department}">-->
-    <a href="/userManage">
-        <button class="userManage-button" type="button">ユーザ管理</button>
-    </a>
-    <!--    </div>-->
+    <div th:each="loginUser : ${loginUser}">
+        <div th:if="${loginUser.departmentId == 1}">
+            <a href="/userManage">
+                <button class="userManage-button" type="button">ユーザ管理</button>
+            </a>
+        </div>
+    </div>
 
     <form th:method="get" action="/top">
         <div class="form-area">
@@ -48,17 +50,17 @@
             <input type="submit" value="絞込">
         </div>
     </form>
-
-    <div class="form-area" th:each="contentData : ${contentData}">
-        <div class="title">
-            件名 : <span th:text="${contentData.title}"/>
-        </div>
-        <div class="text">
-            本文 : <span th:text="${contentData.text}"/>
-        </div>
-        <div class="category">
-            カテゴリー : <span th:text="${contentData.category}"/>
-        </div>
+    <div class="main-contents">
+        <div class="tasks" th:each="contentData : ${contentData}">
+            <div class="title">
+                件名 : <span th:text="${contentData.title}"/>
+            </div>
+            <div class="text">
+                <pre>本文 : <span th:text="${contentData.text}"/></pre>
+            </div>
+            <div class="category">
+                カテゴリー : <span th:text="${contentData.category}"/>
+            </div>
 
         <!--usersテーブルのアカウント名と名前-->
         <div class="tasks" th:each="userData : ${userData}">
@@ -82,39 +84,40 @@
             </form>
         </div>
 
-        <!--コメント返信投稿-->
-        <form method="post" action="/commentAdd" th:object="${formModel}">
-            <div class="form-area">
-                <div class="errorMessages">
-                    <div th:if="${MessageId == contentData.id}">
-                        <span th:text="${errorMessages}"/>
+            <!--コメント返信投稿-->
+            <form method="post" action="/commentAdd" th:object="${formModel}">
+                <div class="form-area">
+                    <div class="errorMessages">
+                        <div th:if="${MessageId == contentData.id}">
+                            <span th:text="${commentErrorMessage}"/>
+                        </div>
                     </div>
+                    <!--textはEntityへと通じてる-->
+                    <textarea class="comment-box" th:field="*{text}" size="20" maxlength="600"/></textarea></br>
+                    <input type="hidden" name="messageId" th:value="${contentData.id}"/>
+                    <input type="submit" value="返信"/>
                 </div>
-                <!--textはEntityへと通じてる-->
-                <textarea class="comment-box" th:field="*{text}" size="20" maxlength="600"/></textarea><br/>
-                <input type="hidden" name="messageId" th:value="${contentData.id}"/>
-                <input type="submit" value="返信"/>
-            </div>
-        </form>
+            </form>
 
         <!--コメント返信表示処理-->
         <div class="message-icon" th:each="commentData : ${commentData}">
 
-            <div th:if="${contentData.id == commentData.messageId}">
-                <div class="text">
-                    コメント : <span th:text="${commentData.text}"/>
-                </div>
-                <div class="text">
-                    作成日時 : <span th:text="${commentData.createdDate}"/>
-                </div>
-                <div class="delete-button">
-                    <form th:if="${loginUser != null and loginUser.id == commentData.userId}"
-                          th:action="@{/commentDelete/{id}(id=${commentData.id})}" th:method="delete">
-                        <input class=confirm-action-btn type="submit" value="削除">
-                    </form>
+                <div th:if="${contentData.id == commentData.messageId}">
+                    <div class="text">
+                        コメント : <pre><span th:text="${commentData.text}"/></pre>
+                    </div>
+                    <div class="text">
+                        作成日時 : <span th:text="${commentData.createdDate}"/>
+                    </div>
+                    <div class="delete-button">
+                        <form th:if="${loginUser != null and loginUser.id == commentData.userId}"
+                              th:action="@{/commentDelete/{id}(id=${commentData.id})}" th:method="delete">
+                            <input class=confirm-action-btn type="submit" value="削除">
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
+            <br/>
         <br/>
     </div>
 

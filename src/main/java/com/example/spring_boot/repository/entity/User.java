@@ -48,12 +48,5 @@ public class User implements Serializable {
     @Column(name = "updated_date", insertable = false, updatable = true)
     private Date updatedDate;
 
-    // ★リレーションシップはそのまま残します
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "department_id")
-//    private Department department;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "branch_id")
-//    private Branch branch;
+
 }

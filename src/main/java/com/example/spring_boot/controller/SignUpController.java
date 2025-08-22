@@ -31,14 +31,18 @@ public class SignUpController {
     @GetMapping("/signUp")
     public ModelAndView signUpContent() {
         ModelAndView mav = new ModelAndView();
+        UserEditForm userEditForm = (UserEditForm) session.getAttribute("userEditForm");
+        if(userEditForm == null) {
+            userEditForm = new UserEditForm();
+        }
         // form用の空のentityを準備
-        UserEditForm userEditForm = new UserEditForm();
+        //UserEditForm userEditForm = new UserEditForm();
         // 画面遷移先を指定
         mav.setViewName("/signUp");
         // 準備した空のFormを保管
         mav.addObject("formModel", userEditForm);
         mav.addObject("errorMessages", session.getAttribute("errorMessages"));
-        //session.invalidate();
+        session.removeAttribute("errorMessages");
         return mav;
     }
 
@@ -54,7 +58,7 @@ public class SignUpController {
             for (ObjectError error : result.getAllErrors()) {
                 // ここでメッセージを取得する。
                 errorMessages.add(error.getDefaultMessage());
-
+                session.setAttribute("userEditForm",userEditForm);
                 session.setAttribute("errorMessages", errorMessages);
                 return new ModelAndView("redirect:/signUp");
             }
@@ -83,6 +87,7 @@ public class SignUpController {
             errorMessages.add("支社と部署の組み合わせが不正です");
         }
         if(!(errorMessages.isEmpty())){
+            session.setAttribute("userEditForm",userEditForm);
             session.setAttribute("errorMessages",errorMessages);
             return new ModelAndView("redirect:/signUp");
         }
@@ -92,6 +97,7 @@ public class SignUpController {
             userService.updateUser(userEditForm);
         } catch (Exception e) {
             // Serviceから重複エラーがスローされた場合
+            session.setAttribute("userEditForm",userEditForm);
             session.setAttribute("errorMessages", e.getMessage());
             return new ModelAndView("redirect:/signUp");
         }
