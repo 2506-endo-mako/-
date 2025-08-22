@@ -4,6 +4,7 @@ import com.example.spring_boot.controller.form.UserEditForm;
 import com.example.spring_boot.controller.form.UserForm;
 //import com.example.spring_boot.dto.UserWithDetailsDto;
 import com.example.spring_boot.repository.UserRepository;
+import com.example.spring_boot.repository.entity.User;
 import com.example.spring_boot.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,8 @@ public class UserManageController {
     @GetMapping("/userManage")
     public ModelAndView userManageContent() {
         ModelAndView mav = new ModelAndView();
+        //セッションから取得
+        User loginUser = (User) session.getAttribute("loginUser");
         // ユーザー情報を全件取得
         List<UserEditForm> userData = userService.findAllUser();
         // form用の空のentityを準備
@@ -42,6 +45,7 @@ public class UserManageController {
         mav.addObject("userData", userData);
         // 準備した空のFormを保管
         mav.addObject("formModel", userEditForm);
+        mav.addObject("loginUser",loginUser);
         mav.addObject("errorMessages", session.getAttribute("errorMessages"));
 
 //        // リポジトリから結合されたデータを取得
