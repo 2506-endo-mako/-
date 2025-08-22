@@ -31,7 +31,8 @@
                 <!--            <div class="departmentName">-->
                 <!--                部署名 : <span th:text="${userData.departmentName}"/>-->
                 <!--            </div>-->
-                <form th:action="@{/updateStatus/{id}(id=${userData.id})}" th:method="put">
+                <form th:if="${userData.id} != ${loginUser.id}"
+                      th:action="@{/updateStatus/{id}(id=${userData.id})}" th:method="put">
                     <div class="isStopped">
                         ユーザー状態 : <select name="status">
                         <option value="0" th:selected="${userData.isStopped == 0}"> 稼働</option>
@@ -39,10 +40,11 @@
                     </select>
                         <input class=confirm-action-btn type="submit" value="更新"/>
                     </div>
-<!--                    <div th:if="${userData.id} == ${logInUser.Id}">-->
-<!--                        ユーザー状態 : <span th:text="${userData.isStopped}"/>-->
-<!--                    </div>-->
                 </form>
+                <div th:if="${userData.id} == ${loginUser.id}">
+                    ユーザー状態 : <span th:text="${(userData.isStopped ?: 0) == 0 ? '稼働' : '停止'}"></span>
+                </div>
+
                 <!--編集ボタン-->
                 <div class="edit-button">
                     <form th:action="@{/userEdit/{id}(id=${userData.id})}">
