@@ -2,6 +2,7 @@ package com.example.spring_boot.controller;
 
 import com.example.spring_boot.controller.form.CommentForm;
 import com.example.spring_boot.controller.form.MessageForm;
+import com.example.spring_boot.controller.form.UserEditForm;
 import com.example.spring_boot.controller.form.UserForm;
 import com.example.spring_boot.repository.MessageRepository;
 import com.example.spring_boot.repository.entity.User;
@@ -60,7 +61,7 @@ public class TopController {
         mav.addObject("category", category);
         mav.addObject("loginUser",loginUser);
 
-        List<UserForm> userData = userService.findAllUser();
+        List<UserEditForm> userData = userService.findAllUser();
         // 画面遷移先を指定
         mav.setViewName("/top");
         //空の箱を準備

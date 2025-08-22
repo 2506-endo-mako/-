@@ -59,10 +59,9 @@ public class SignUpController {
                 // ここでメッセージを取得する。
                 errorMessages.add(error.getDefaultMessage());
             }
-                session.setAttribute("userEditForm",userEditForm);
-                session.setAttribute("errorMessages", errorMessages);
-                return new ModelAndView("redirect:/signUp");
-
+            session.setAttribute("userEditForm",userEditForm);
+            session.setAttribute("errorMessages", errorMessages);
+            return new ModelAndView("redirect:/signUp");
         }
         List<String> errorMessages = new ArrayList<>();
         //パスワードと確認パスワードが違う場合
@@ -102,7 +101,7 @@ public class SignUpController {
             session.setAttribute("errorMessages", e.getMessage());
             return new ModelAndView("redirect:/signUp");
         }
-        
+
         userService.registerUser(userEditForm, userEditForm.getPassword());
         return new ModelAndView("redirect:/userManage");
     }
