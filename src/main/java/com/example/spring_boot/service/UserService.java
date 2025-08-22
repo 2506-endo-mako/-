@@ -29,43 +29,49 @@ public class UserService {
     /*
      * ユーザーのレコード全件取得処理
      */
-    public List<UserForm> findAllUser() {
+    public List<UserEditForm> findAllUser() {
         List<User> results = userRepository.findAll();
-        List<UserForm> users = setAllUser(results);
+        List<UserEditForm> users = setAllUser(results);
         return users;
     }
 
     /*
      * レコード1件取得処理
      */
-    public UserForm editUser(Integer id) {
+    public UserEditForm editUser(Integer id) {
         List<User> results = new ArrayList<>();
         results.add((User) userRepository.findById(id).orElse(null));
-        List<UserForm> users = setAllUser(results);
+        List<UserEditForm> users = setAllUser(results);
+        if(users == null){
+            return null;
+        }
         return users.get(0);
     }
 
     /*
      * DBから取得したデータをFormに設定
      */
-    private List<UserForm> setAllUser(List<User> results) {
-        List<UserForm> users = new ArrayList<>();
+    private List<UserEditForm> setAllUser(List<User> results) {
+        List<UserEditForm> users = new ArrayList<>();
         for (int i = 0; i < results.size(); i++) {
-            UserForm userForm = new UserForm();
+            UserEditForm userEditForm = new UserEditForm();
             User result = results.get(i);
-            userForm.setId(result.getId());
-            userForm.setAccount(result.getAccount());
-            userForm.setPassword(result.getPassword());
+            if(result == null){
+                return null;
+            }
+            userEditForm.setId(result.getId());
+            userEditForm.setAccount(result.getAccount());
+            userEditForm.setPassword(result.getPassword());
             //userForm.setConfirmPassword(result.getConfirmPassword());
-            userForm.setName(result.getName());
-            userForm.setBranchId(result.getBranchId());
-            userForm.setDepartmentId(result.getDepartmentId());
+            userEditForm.setName(result.getName());
+            userEditForm.setBranchId(result.getBranchId());
+            userEditForm.setDepartmentId(result.getDepartmentId());
 
             //userForm.setBranchName(result.getBranchName());
             //userForm.setDepartmentName(result.getDepartmentName());
 
-            userForm.setIsStopped(result.getIsStopped());
-            users.add(userForm);
+            userEditForm.setIsStopped(result.getIsStopped());
+            users.add(userEditForm);
         }
         return users;
     }
@@ -157,7 +163,7 @@ public class UserService {
             //    IDが一致する場合、それは自分自身のレコードなので重複ではない
             if (existingUser.getId() != (reqUser.getId())) {
                 // IDが一致しない場合、別のアカウントが同じアカウント名を持っているため重複エラー
-                throw new Exception("このアカウント名はすでに使用されています。");
+                throw new Exception("アカウントが重複しています");
             }
         User saveUsers = setUserEditEntity(reqUser);
         userRepository.save(saveUsers);

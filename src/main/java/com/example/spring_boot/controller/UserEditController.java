@@ -28,21 +28,25 @@ public class UserEditController {
     /*
      *ユーザー編集画面表示
      */
-    @GetMapping(value={"/userEdit/", "/userEdit/{id}"})
+    @GetMapping(value={"/userEdit", "/userEdit/{id}"})
     //@ResponseBody
     public ModelAndView editContent(@PathVariable(required = false) Optional<String> id) {
 
         String Id = id.orElse(null);
 
-        if (!Id.matches("^[0-9]*$") || Id.equals(null)) {
-            session.setAttribute("errorMessages", "不正なパラメータです");
+        if (Id == null || !Id.matches("^[0-9]*$")) {
+            session.setAttribute("errorMessages", "不正なパラメータが入力されました");
             return new ModelAndView("redirect:/userManage");
         }
 
         ModelAndView mav = new ModelAndView();
         //編集するユーザー情報を取得
-        UserForm user = userService.editUser(Integer.valueOf(Id));
+        UserEditForm user = userService.editUser(Integer.valueOf(Id));
 
+        if (user == null) {
+            session.setAttribute("errorMessages", "不正なパラメータが入力されました");
+            return new ModelAndView("redirect:/userManage");
+        }
         mav.setViewName("/userEdit");
         // 編集内容を保管
         mav.addObject("formModel", user);

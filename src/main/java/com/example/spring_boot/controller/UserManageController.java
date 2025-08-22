@@ -1,5 +1,6 @@
 package com.example.spring_boot.controller;
 
+import com.example.spring_boot.controller.form.UserEditForm;
 import com.example.spring_boot.controller.form.UserForm;
 //import com.example.spring_boot.dto.UserWithDetailsDto;
 import com.example.spring_boot.repository.UserRepository;
@@ -33,14 +34,14 @@ public class UserManageController {
     public ModelAndView userManageContent() {
         ModelAndView mav = new ModelAndView();
         // ユーザー情報を全件取得
-        List<UserForm> userData = userService.findAllUser();
+        List<UserEditForm> userData = userService.findAllUser();
         // form用の空のentityを準備
-        UserForm userForm = new UserForm();
+        UserEditForm userEditForm = new UserEditForm();
         // 画面遷移先を指定
         mav.setViewName("/userManage");
         mav.addObject("userData", userData);
         // 準備した空のFormを保管
-        mav.addObject("formModel", userForm);
+        mav.addObject("formModel", userEditForm);
         mav.addObject("errorMessages", session.getAttribute("errorMessages"));
 
 //        // リポジトリから結合されたデータを取得
