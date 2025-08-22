@@ -1,7 +1,9 @@
-package com.example.spring_boot.controller.form;
+package com.example.spring_boot.repository.entity;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -11,30 +13,27 @@ import lombok.Setter;
 
 import java.util.Date;
 
+@Entity
+@Table(name = "users")
 @Getter
 @Setter
 
-public class UserEditForm {
+public class SignUp {
+
 
     @Id
     @Column
     private int id;
 
     @Column
-    @NotBlank(message = "アカウントを入力してください")
     /* 配列要素重複チェック */
-    @Pattern(regexp = "[a-zA-Z0-9]{6,20}+", message = "アカウントは半角英数字かつ6文字以上20文字以下で入力してください")
     private String account;
 
-    @NotBlank(message = "パスワードを入力してください")
-    @Pattern(regexp = "[a-zA-Z0-9]{6,20}+.*", message = "パスワードは半角文字かつ6文字以上20文字以下で入力してください")
     private String password;
 
     @Column
     private String confirmPassword;
 
-    @NotBlank(message = "氏名を入力してください")
-    @Size(max = 10, message = "氏名は10文字以下で入力してください")
     @Column
     private String name;
 
@@ -52,5 +51,4 @@ public class UserEditForm {
 
     @Column(name = "updated_date", insertable = false, updatable = true)
     private Date updatedDate;
-
 }

@@ -1,10 +1,9 @@
 package com.example.spring_boot.service;
 
+import com.example.spring_boot.controller.form.SignUpForm;
 import com.example.spring_boot.controller.form.UserEditForm;
 import com.example.spring_boot.controller.form.UserForm;
 import com.example.spring_boot.repository.UserRepository;
-import com.example.spring_boot.repository.entity.Branch;
-import com.example.spring_boot.repository.entity.Department;
 import com.example.spring_boot.repository.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -77,9 +76,9 @@ public class UserService {
     }
 
     // ユーザー登録メソッド
-    public User registerUser(UserEditForm reqUser, String rawPassword) {
+    public User registerUser(SignUpForm reqUser, String rawPassword) {
         // まずsetUserEditEntityを呼び出して、パスワード以外の情報を設定したUserオブジェクトを取得
-        User user = setUserEditEntity(reqUser);
+        User user = setSignUpEntity(reqUser);
         //パスワードのハッシュ化
         String hashedPassword = passwordEncoder.encode(rawPassword);
         // ハッシュ化されたパスワードをUserオブジェクトに設定
@@ -149,11 +148,10 @@ public class UserService {
 //        return user;
 //    }
 
-
     /*
-     * 更新したusersテーブルのレコード追加
+     * 更新したusersテーブルのレコード追加(ユーザー編集の時使用)
      */
-    public void updateUser(UserEditForm reqUser) throws Exception {
+    public void editUpdateUser(UserEditForm reqUser) throws Exception {
         // 1. フォームから送られてきたアカウント名で、既存のレコードを検索する
         Optional<User> existingUserOptional = userRepository.findByAccount(reqUser.getAccount());
 
@@ -167,10 +165,68 @@ public class UserService {
                 // IDが一致しない場合、別のアカウントが同じアカウント名を持っているため重複エラー
                 throw new Exception("アカウントが重複しています");
             }
-        User saveUsers = setUserEditEntity(reqUser);
+            User saveUsers = setUserEditEntity(reqUser);
+            userRepository.save(saveUsers);
+        }
+    }
+
+    /*
+     * 更新したusersテーブルのレコード追加（新規登録の時使用）
+     */
+    public void updateUser(SignUpForm reqUser) throws Exception {
+        // 1. フォームから送られてきたアカウント名で、既存のレコードを検索する
+        Optional<User> existingUserOptional = userRepository.findByAccount(reqUser.getAccount());
+
+        // 2. 検索結果が存在する場合、重複チェックを行う
+        if (existingUserOptional.isPresent()) {
+            User existingUser = existingUserOptional.get();
+
+            // 3. 取得したレコードのIDが、更新対象のIDと一致するかどうかを比較する
+            //    IDが一致する場合、それは自分自身のレコードなので重複ではない
+            if (existingUser.getId() != (reqUser.getId())) {
+                // IDが一致しない場合、別のアカウントが同じアカウント名を持っているため重複エラー
+                throw new Exception("アカウントが重複しています");
+            }
+        User saveUsers = setSignUpEntity(reqUser);
         userRepository.save(saveUsers);
         }
     }
+
+    /*
+     * リクエストから取得した情報をEntityに設定
+     */
+    private User setSignUpEntity(SignUpForm reqUser) {
+        //現在日時を取得
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
+        //変数endにsdfからformatメソッドで引数dateを渡したものを代入して
+        //現在日時をendDateに入れている
+        String strDate = sdf.format(date);
+        Date nowDate;
+        try {
+            nowDate = sdf.parse(strDate);
+        } catch (ParseException e) {
+            //例外が発生した場所や原因をより詳細に把握できる
+            e.printStackTrace();
+            return null;
+        }
+
+        User user = new User();
+        user.setId(reqUser.getId());
+        user.setAccount(reqUser.getAccount());
+        user.setPassword(reqUser.getPassword());
+        user.setName(reqUser.getName());
+        if(reqUser.getIsStopped() == null) {
+            user.setIsStopped(0);
+        } else {
+            user.setIsStopped(reqUser.getIsStopped());
+        }
+        user.setCreatedDate(nowDate);
+        user.setUpdatedDate(nowDate);
+        return user;
+    }
+
 
     /*
      * リクエストから取得した情報をEntityに設定
