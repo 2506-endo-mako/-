@@ -71,10 +71,10 @@ public class UserEditController {
             for (ObjectError error : result.getAllErrors()) {
                 // ここでメッセージを取得する。
                 errorMessages.add(error.getDefaultMessage());
-
+            }
                 session.setAttribute("errorMessages", errorMessages);
                 return new ModelAndView("redirect:/userEdit/{id}");
-            }
+
         }
         List<String> errorMessages = new ArrayList<>();
         //パスワードと確認パスワードが違う場合
@@ -107,7 +107,7 @@ public class UserEditController {
         //アカウント重複チェック
         try {
             // Serviceの更新メソッドを呼び出す
-            userService.updateUser(userEditForm);
+            userService.editUpdateUser(userEditForm);
             } catch (Exception e) {
                 // Serviceから重複エラーがスローされた場合
                 session.setAttribute("errorMessages", e.getMessage());

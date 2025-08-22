@@ -1,5 +1,6 @@
 package com.example.spring_boot.controller;
 
+import com.example.spring_boot.controller.form.SignUpForm;
 import com.example.spring_boot.controller.form.UserEditForm;
 import com.example.spring_boot.controller.form.UserForm;
 import com.example.spring_boot.service.UserService;
@@ -31,16 +32,14 @@ public class SignUpController {
     @GetMapping("/signUp")
     public ModelAndView signUpContent() {
         ModelAndView mav = new ModelAndView();
-        UserEditForm userEditForm = (UserEditForm) session.getAttribute("userEditForm");
-        if(userEditForm == null) {
-            userEditForm = new UserEditForm();
+        SignUpForm signUpForm = (SignUpForm) session.getAttribute("signUpForm");
+        if(signUpForm == null) {
+            signUpForm = new SignUpForm();
         }
-        // form用の空のentityを準備
-        //UserEditForm userEditForm = new UserEditForm();
         // 画面遷移先を指定
         mav.setViewName("/signUp");
         // 準備した空のFormを保管
-        mav.addObject("formModel", userEditForm);
+        mav.addObject("formModel", signUpForm);
         mav.addObject("errorMessages", session.getAttribute("errorMessages"));
         session.removeAttribute("errorMessages");
         return mav;
@@ -50,7 +49,7 @@ public class SignUpController {
      * 新規ユーザー登録処理
      */
     @PostMapping("/signUpAdd")
-    public ModelAndView addContent(@Validated @ModelAttribute("formModel") UserEditForm userEditForm,
+    public ModelAndView addContent(@Validated @ModelAttribute("formModel") SignUpForm signUpForm,
                                    BindingResult result) throws ParseException {
         //バリデーション
         if (result.hasErrors()) {
@@ -59,50 +58,48 @@ public class SignUpController {
                 // ここでメッセージを取得する。
                 errorMessages.add(error.getDefaultMessage());
             }
-            session.setAttribute("userEditForm",userEditForm);
+            session.setAttribute("signUpForm",signUpForm);
             session.setAttribute("errorMessages", errorMessages);
             return new ModelAndView("redirect:/signUp");
         }
         List<String> errorMessages = new ArrayList<>();
         //パスワードと確認パスワードが違う場合
-        String password = userEditForm.getPassword();
-        String confirmPassword = userEditForm.getConfirmPassword();
+        String password = signUpForm.getPassword();
+        String confirmPassword = signUpForm.getConfirmPassword();
         if(!(password.equals(confirmPassword))) {
             errorMessages.add("パスワードと確認用パスワードが一致しません");
-            //session.setAttribute("errorMessages", "パスワードと確認用パスワードが一致しません");
-            //return new ModelAndView("redirect:/userEdit/{id}");
         }
         //支社と部署の組み合わせが不正の時
-        if((userEditForm.getBranchId() == 1 && userEditForm.getDepartmentId() == 3)
-                || (userEditForm.getBranchId() == 1 && userEditForm.getDepartmentId() == 4)
-                || (userEditForm.getBranchId() == 1 && userEditForm.getDepartmentId() == 5)
-                || (userEditForm.getBranchId() == 2 && userEditForm.getDepartmentId() == 1)
-                || (userEditForm.getBranchId() == 2 && userEditForm.getDepartmentId() == 2)
-                || (userEditForm.getBranchId() == 3 && userEditForm.getDepartmentId() == 1)
-                || (userEditForm.getBranchId() == 3 && userEditForm.getDepartmentId() == 2)
-                || (userEditForm.getBranchId() == 4 && userEditForm.getDepartmentId() == 1)
-                || (userEditForm.getBranchId() == 4 && userEditForm.getDepartmentId() == 2)
-                || (userEditForm.getBranchId() == 5 && userEditForm.getDepartmentId() == 1)
-                || (userEditForm.getBranchId() == 5 && userEditForm.getDepartmentId() == 2)) {
+        if((signUpForm.getBranchId() == 1 && signUpForm.getDepartmentId() == 3)
+                || (signUpForm.getBranchId() == 1 && signUpForm.getDepartmentId() == 4)
+                || (signUpForm.getBranchId() == 1 && signUpForm.getDepartmentId() == 5)
+                || (signUpForm.getBranchId() == 2 && signUpForm.getDepartmentId() == 1)
+                || (signUpForm.getBranchId() == 2 && signUpForm.getDepartmentId() == 2)
+                || (signUpForm.getBranchId() == 3 && signUpForm.getDepartmentId() == 1)
+                || (signUpForm.getBranchId() == 3 && signUpForm.getDepartmentId() == 2)
+                || (signUpForm.getBranchId() == 4 && signUpForm.getDepartmentId() == 1)
+                || (signUpForm.getBranchId() == 4 && signUpForm.getDepartmentId() == 2)
+                || (signUpForm.getBranchId() == 5 && signUpForm.getDepartmentId() == 1)
+                || (signUpForm.getBranchId() == 5 && signUpForm.getDepartmentId() == 2)) {
             errorMessages.add("支社と部署の組み合わせが不正です");
         }
         if(!(errorMessages.isEmpty())){
-            session.setAttribute("userEditForm",userEditForm);
+            session.setAttribute("signUpForm",signUpForm);
             session.setAttribute("errorMessages",errorMessages);
             return new ModelAndView("redirect:/signUp");
         }
         //アカウント重複チェック
         try {
             // Serviceの更新メソッドを呼び出す
-            userService.updateUser(userEditForm);
+            userService.updateUser(signUpForm);
         } catch (Exception e) {
             // Serviceから重複エラーがスローされた場合
-            session.setAttribute("userEditForm",userEditForm);
+            session.setAttribute("signUpForm",signUpForm);
             session.setAttribute("errorMessages", e.getMessage());
             return new ModelAndView("redirect:/signUp");
         }
 
-        userService.registerUser(userEditForm, userEditForm.getPassword());
+        userService.registerUser(signUpForm, signUpForm.getPassword());
         return new ModelAndView("redirect:/userManage");
     }
 }
