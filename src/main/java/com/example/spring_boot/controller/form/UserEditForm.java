@@ -37,6 +37,7 @@ public class UserEditForm {
 
     @NotBlank(message = "氏名を入力してください")
     @Size(max = 10, message = "氏名は10文字以下で入力してください")
+    @Column
     private String name;
 
     @NotNull(message = "支社を選択してください")

@@ -50,7 +50,7 @@
             <input type="submit" value="絞込">
         </div>
     </form>
-    <div class="main-contents">
+    <div class="form-area">
         <div class="tasks" th:each="contentData : ${contentData}">
             <div class="title">
                 件名 : <span th:text="${contentData.title}"/>

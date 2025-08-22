@@ -71,10 +71,12 @@ public class UserService {
     }
 
     // ユーザー登録メソッド
-    public User registerUser(String account, String rawPassword) {
+    public User registerUser(UserEditForm reqUser, String rawPassword) {
+        // まずsetUserEditEntityを呼び出して、パスワード以外の情報を設定したUserオブジェクトを取得
+        User user = setUserEditEntity(reqUser);
+        //パスワードのハッシュ化
         String hashedPassword = passwordEncoder.encode(rawPassword);
-        User user = new User();
-        user.setAccount(account);
+        // ハッシュ化されたパスワードをUserオブジェクトに設定
         user.setPassword(hashedPassword);
         return userRepository.save(user);
     }
@@ -107,39 +109,39 @@ public class UserService {
     /*
      * リクエストから取得した情報をEntityに設定
      */
-    private User setUserEntity(UserForm reqUser) {
-        //現在日時を取得
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-
-        //変数endにsdfからformatメソッドで引数dateを渡したものを代入して
-        //現在日時をendDateに入れている
-        String strDate = sdf.format(date);
-        Date nowDate;
-        try {
-            nowDate = sdf.parse(strDate);
-        } catch (ParseException e) {
-            //例外が発生した場所や原因をより詳細に把握できる
-            e.printStackTrace();
-            return null;
-        }
-
-        User user = new User();
-        user.setId(reqUser.getId());
-        user.setAccount(reqUser.getAccount());
-        user.setPassword(reqUser.getPassword());
-        user.setName(reqUser.getName());
-        user.setBranchId(reqUser.getBranchId());
-        user.setDepartmentId(reqUser.getDepartmentId());
-        if(reqUser.getIsStopped() == null) {
-            user.setIsStopped(0);
-        } else {
-            user.setIsStopped(reqUser.getIsStopped());
-        }
-        user.setCreatedDate(nowDate);
-        user.setUpdatedDate(nowDate);
-        return user;
-    }
+//    private User setUserEntity(UserForm reqUser) {
+//        //現在日時を取得
+//        Date date = new Date();
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+//
+//        //変数endにsdfからformatメソッドで引数dateを渡したものを代入して
+//        //現在日時をendDateに入れている
+//        String strDate = sdf.format(date);
+//        Date nowDate;
+//        try {
+//            nowDate = sdf.parse(strDate);
+//        } catch (ParseException e) {
+//            //例外が発生した場所や原因をより詳細に把握できる
+//            e.printStackTrace();
+//            return null;
+//        }
+//
+//        User user = new User();
+//        user.setId(reqUser.getId());
+//        user.setAccount(reqUser.getAccount());
+//        user.setPassword(reqUser.getPassword());
+//        user.setName(reqUser.getName());
+//        user.setBranchId(reqUser.getBranchId());
+//        user.setDepartmentId(reqUser.getDepartmentId());
+//        if(reqUser.getIsStopped() == null) {
+//            user.setIsStopped(0);
+//        } else {
+//            user.setIsStopped(reqUser.getIsStopped());
+//        }
+//        user.setCreatedDate(nowDate);
+//        user.setUpdatedDate(nowDate);
+//        return user;
+//    }
 
 
     /*
