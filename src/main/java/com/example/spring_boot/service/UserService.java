@@ -3,6 +3,7 @@ package com.example.spring_boot.service;
 import com.example.spring_boot.controller.form.SignUpForm;
 import com.example.spring_boot.controller.form.UserEditForm;
 import com.example.spring_boot.controller.form.UserForm;
+import com.example.spring_boot.dto.UserDetailDto;
 import com.example.spring_boot.repository.UserRepository;
 import com.example.spring_boot.repository.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,9 @@ public class UserService {
     /*
      * ユーザーのレコード全件取得処理
      */
-    public List<UserEditForm> findAllUser() {
-        List<User> results = userRepository.findAll();
-        List<UserEditForm> users = setAllUser(results);
+    public List<UserDetailDto> findAllUser() {
+        List<UserDetailDto> users = userRepository.findAllUserDetails();
+        // DTOのリストを直接返す
         return users;
     }
 
@@ -41,7 +42,7 @@ public class UserService {
         List<User> results = new ArrayList<>();
         results.add((User) userRepository.findById(id).orElse(null));
         List<UserEditForm> users = setAllUser(results);
-        if(users == null){
+        if (users == null) {
             return null;
         }
         return users.get(0);
@@ -55,7 +56,7 @@ public class UserService {
         for (int i = 0; i < results.size(); i++) {
             UserEditForm userEditForm = new UserEditForm();
             User result = results.get(i);
-            if(result == null){
+            if (result == null) {
                 return null;
             }
             userEditForm.setId(result.getId());
@@ -165,9 +166,9 @@ public class UserService {
                 // IDが一致しない場合、別のアカウントが同じアカウント名を持っているため重複エラー
                 throw new Exception("アカウントが重複しています");
             }
-            User saveUsers = setUserEditEntity(reqUser);
-            userRepository.save(saveUsers);
         }
+        User saveUsers = setUserEditEntity(reqUser);
+        userRepository.save(saveUsers);
     }
 
     /*
@@ -187,8 +188,8 @@ public class UserService {
                 // IDが一致しない場合、別のアカウントが同じアカウント名を持っているため重複エラー
                 throw new Exception("アカウントが重複しています");
             }
-        User saveUsers = setSignUpEntity(reqUser);
-        userRepository.save(saveUsers);
+            User saveUsers = setSignUpEntity(reqUser);
+            userRepository.save(saveUsers);
         }
     }
 
@@ -219,7 +220,7 @@ public class UserService {
         user.setName(reqUser.getName());
         user.setBranchId(reqUser.getBranchId());
         user.setDepartmentId(reqUser.getDepartmentId());
-        if(reqUser.getIsStopped() == null) {
+        if (reqUser.getIsStopped() == null) {
             user.setIsStopped(0);
         } else {
             user.setIsStopped(reqUser.getIsStopped());
@@ -257,8 +258,8 @@ public class UserService {
         user.setName(reqUser.getName());
         user.setBranchId(reqUser.getBranchId());
         user.setDepartmentId(reqUser.getDepartmentId());
-        if(reqUser.getIsStopped() == null) {
-         user.setIsStopped(0);
+        if (reqUser.getIsStopped() == null) {
+            user.setIsStopped(0);
         } else {
             user.setIsStopped(reqUser.getIsStopped());
         }
@@ -277,7 +278,7 @@ public class UserService {
     /*
      * リクエストから取得した情報をEntityに設定
      */
-    private User updateSetUserEntity(UserForm reqUser,User saveUser) {
+    private User updateSetUserEntity(UserForm reqUser, User saveUser) {
 
         User user = new User();
 

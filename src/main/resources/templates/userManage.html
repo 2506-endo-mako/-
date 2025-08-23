@@ -25,16 +25,16 @@
                 <div class="name">
                     名前 : <span th:text="${userData.name}"/>
                 </div>
-                <!--            <div class="branchName">-->
-                <!--                支店名 : <span th:text="${userData.branchName}"/>-->
-                <!--            </div>-->
-                <!--            <div class="departmentName">-->
-                <!--                部署名 : <span th:text="${userData.departmentName}"/>-->
-                <!--            </div>-->
+                <div class="branchName">
+                    支店名 : <span th:text="${userData.branchName}"/>
+                </div>
+                <div class="departmentName">
+                    部署名 : <span th:text="${userData.departmentName}"/>
+                </div>
                 <form th:if="${userData.id} != ${loginUser.id}"
                       th:action="@{/updateStatus/{id}(id=${userData.id})}" th:method="put">
                     <div class="isStopped">
-                        ユーザー状態 : <select name="status">
+                        稼働状態 : <select name="status">
                         <option value="0" th:selected="${userData.isStopped == 0}"> 稼働</option>
                         <option value="1" th:selected="${userData.isStopped == 1}"> 停止</option>
                     </select>
@@ -42,7 +42,7 @@
                     </div>
                 </form>
                 <div th:if="${userData.id} == ${loginUser.id}">
-                    ユーザー状態 : <span th:text="${(userData.isStopped ?: 0) == 0 ? '稼働' : '停止'}"></span>
+                    稼働状態 : <span th:text="${(userData.isStopped ?: 0) == 0 ? '稼働' : '停止'}"></span>
                 </div>
 
                 <!--編集ボタン-->

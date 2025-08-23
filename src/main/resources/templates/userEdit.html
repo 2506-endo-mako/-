@@ -43,11 +43,11 @@
                         <option value="5" th:selected="${status == 5}">D支社</option>
                     </select>
                     <label>部署ID</label>
-                    <select th:name="departmentId" type="departmentId" th:field="*{departmentId}"/>
-                    <option value="1" th:selected="${status == 1}">総務人事部</option>
-                    <option value="2" th:selected="${status == 2}">情報管理部</option>
-                    <option value="3" th:selected="${status == 3}">営業部</option>
-                    <option value="4" th:selected="${status == 4}">技術部</option>
+                    <select th:name="departmentId" type="departmentId" th:field="*{departmentId}">
+                        <option value="1" th:selected="${status == 1}">総務人事部</option>
+                        <option value="2" th:selected="${status == 2}">情報管理部</option>
+                        <option value="3" th:selected="${status == 3}">営業部</option>
+                        <option value="4" th:selected="${status == 4}">技術部</option>
                     </select></br>
                     <input type="submit" value="更新"/>
                 </div>
