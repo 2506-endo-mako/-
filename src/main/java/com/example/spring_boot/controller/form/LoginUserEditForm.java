@@ -14,7 +14,7 @@ import java.util.Date;
 @Getter
 @Setter
 
-public class UserEditForm {
+public class LoginUserEditForm {
 
     @Id
     @Column
@@ -38,12 +38,10 @@ public class UserEditForm {
     @Column
     private String name;
 
-    @NotNull(message = "支社を選択してください")
-    @Column(name = "branch_id", insertable = true, updatable = true)
+    @Column(name = "branch_id", insertable = true, updatable = false)
     private Integer branchId;
 
-    @NotNull(message = "部署を選択してください")
-    @Column(name = "department_id", insertable = true, updatable = true)
+    @Column(name = "department_id", insertable = true, updatable = false)
     private Integer departmentId;
 
     @Column(name = "is_stopped", insertable = false, updatable = true)
