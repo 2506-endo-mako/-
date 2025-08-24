@@ -33,10 +33,10 @@ public class User implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "department_id", insertable = true, updatable = false)
+    @Column(name = "department_id", insertable = true, updatable = true)
     private Integer departmentId;
 
-    @Column(name = "branch_id", insertable = true, updatable = false)
+    @Column(name = "branch_id", insertable = true, updatable = true)
     private Integer branchId;
 
     @Column(name = "is_stopped")
