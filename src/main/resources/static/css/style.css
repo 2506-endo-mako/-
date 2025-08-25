@@ -27,7 +27,10 @@ body {
 button {
 	margin-bottom: 5px;
 }
-
+.logout-button{
+    display:outline-block;
+    margin-left: 20px;
+}
 .delete-button{
     display:inline-block;
 }
