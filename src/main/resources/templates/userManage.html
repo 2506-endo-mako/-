@@ -16,7 +16,7 @@
     <a href="/signUp">
         <button class="signUp-button" type="button">新規ユーザー登録</button>
     </a>
-    <form th:method="post" action="/manage">
+    <a th:method="post" action="/manage">
         <div class="main-contents">
             <table class="tasks">
                 <tr class="title">
@@ -44,9 +44,9 @@
                         <form th:if="${userData.id} != ${loginUser.id}"
                               th:action="@{/updateStatus/{id}(id=${userData.id})}" th:method="put">
                             <select name="status">
-                            <option value="0" th:selected="${userData.isStopped == 0}"> 稼働</option>
-                            <option value="1" th:selected="${userData.isStopped == 1}"> 停止</option>
-                        </select>
+                                <option value="0" th:selected="${userData.isStopped == 0}"> 稼働</option>
+                                <option value="1" th:selected="${userData.isStopped == 1}"> 停止</option>
+                            </select>
                             <input class=confirm-action-btn type="submit" value="更新"/>
                         </form>
                         <div th:if="${userData.id} == ${loginUser.id}">
@@ -56,16 +56,14 @@
 
                     <!--編集ボタン-->
                     <td class="user-edit-button">
-                        <form th:action="@{/userEdit/{id}(id=${userData.id})}">
+                        <a th:href="@{/userEdit/{id}(id=${userData.id})}">
                             <input type="submit" value="編集"/>
-                        </form>
+                        </a>
                     </td>
                 </tr>
-
             </table>
         </div>
-
-    </form>
+    </a>
     <script>
         //★更新ボタンへのダイアログ機能
         // 'confirm-action-btn' クラスを持つすべての要素を取得

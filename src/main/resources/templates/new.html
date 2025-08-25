@@ -18,11 +18,11 @@
 <div class="main-contents">
     <form method="post" action="/add" th:object="${formModel}">
         <div class="form-area">
-            <label>件名</label>
+            <label>《件名》</label>
             <textarea class="title" th:field="*{title}" size="20" maxlength="100" /></textarea>
-            <label>本文</label>
+            <label>《本文》</label>
             <textarea class="text-box" th:field="*{text}" size="20" maxlength="1100" /></textarea>
-            <label>カテゴリ</label>
+            <label>《カテゴリ》</label>
             <textarea class="category" th:field="*{category}" size="20" maxlength="100" /></textarea><br/>
             <input type="submit" value="投稿" />
         </div>
