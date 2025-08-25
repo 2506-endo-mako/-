@@ -51,28 +51,32 @@
         </div>
     </form>
     <div class="form-area" th:each="contentData : ${contentData}">
-        <div class="title">
-            件名 : <span th:text="${contentData.title}"/>
-        </div>
-        <div class="text">
-            <pre>本文 : <span th:text="${contentData.text}"/></pre>
-        </div>
-        <div class="category">
-            カテゴリー : <span th:text="${contentData.category}"/>
-        </div>
-
-        <!--usersテーブルのアカウント名と名前-->
         <div class="tasks" th:each="userData : ${userData}">
             <div th:if="${userData.id == contentData.userId}">
-                <div class="text">
-                    アカウント名 : <span th:text="${userData.account}"/>
-                </div>
-                <div class="text">
-                    名前 : <span th:text="${userData.name}"/>
-                </div>
-            </div>
-        </div>
-
+                <table class="tasks">
+                    <tr class="title">
+                        <th class="messageTitle">件名</th>
+                        <th class="message">本文</th>
+                        <th class="messageCategory">カテゴリー</th>
+                        <th class="messageAccount">アカウント名</th>
+                        <th class="messageName">名前</th>
+                    </tr>
+                    <td class="messageTitle">
+                        <span th:text="${contentData.title}"/>
+                    </td>
+                    <td class="message">
+                        <pre><span th:text="${contentData.text}"/></pre>
+                    </td>
+                    <td class="messageCategory">
+                        <span th:text="${contentData.category}"/>
+                    </td>
+                    <td class="messageAccount">
+                        <span th:text="${userData.account}"/>
+                    </td>
+                    <td class="messageName">
+                        <span th:text="${userData.name}"/>
+                    </td>
+                </table>
         <!--削除ボタン-->
         <div class="delete-button">
             <form th:if="${loginUser != null and loginUser.id == contentData.userId}"
@@ -100,15 +104,19 @@
 
         <!--コメント返信表示処理-->
         <div class="message-icon" th:each="commentData : ${commentData}">
-
             <div th:if="${contentData.id == commentData.messageId}">
-                <div class="text">
-                    コメント :
-                    <pre><span th:text="${commentData.text}"/></pre>
-                </div>
-                <div class="text">
-                    作成日時 : <span th:text="${commentData.createdDate}"/>
-                </div>
+                <table class="tasks">
+                    <tr class="title">
+                        <th class="comment">コメント</th>
+                        <th class="date">作成日時</th>
+                    </tr>
+                    <td class="comment">
+                        <pre><span th:text="${commentData.text}"/></pre>
+                    </td>
+                    <td class="date">
+                        <span th:text="${commentData.createdDate}"/>
+                    </td>
+                </table>
                 <div class="delete-button">
                     <form th:if="${loginUser != null and loginUser.id == commentData.userId}"
                           th:action="@{/commentDelete/{id}(id=${commentData.id})}" th:method="delete">
@@ -119,8 +127,6 @@
         </div>
         <br/>
         <br/>
-
-
         <script>
             //★削除ボタンへのダイアログ機能
             // 'confirm-action-btn' クラスを持つすべての要素を取得
@@ -144,6 +150,8 @@
                 });
             });
         </script>
+        </div>
+        </div>
     </div>
 </div>
 </body>

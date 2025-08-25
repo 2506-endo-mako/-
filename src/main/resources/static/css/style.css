@@ -92,7 +92,34 @@ th.isStopped {
     width: 15%;
     text-align: center;
 }
-
+th.comment {
+    width: 15%;
+    text-align: center;
+}
+th.date {
+    width: 15%;
+    text-align: center;
+}
+th.messageTitle {
+    width: 15%;
+    text-align: center;
+}
+th.message {
+    width: 15%;
+    text-align: center;
+}
+th.messageCategory {
+    width: 15%;
+    text-align: center;
+}
+th.messageAccount {
+    width: 15%;
+    text-align: center;
+}
+th.messageName {
+    width: 15%;
+    text-align: center;
+}
 td.branchName {
     width: 15%;
     text-align: center;
@@ -109,6 +136,14 @@ td.isStopped {
 }
 
 td.user-edit-button {
+    width: 15%;
+    text-align: center;
+}
+td.comment {
+    width: 15%;
+    text-align: center;
+}
+td.date {
     width: 15%;
     text-align: center;
 }
