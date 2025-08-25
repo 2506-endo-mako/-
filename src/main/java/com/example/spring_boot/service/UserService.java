@@ -146,7 +146,7 @@ public class UserService {
     /*
      * 更新したusersテーブルのレコード追加(ログインした人のユーザー編集の時使用)
      */
-    public void loginUserEdit(UserEditForm reqUser) throws Exception {
+    public void loginUserEdit(UserEditForm reqUser, String rawPassword) throws Exception {
         // 1. フォームから送られてきたアカウント名で、既存のレコードを検索する
         Optional<User> existingUserOptional = userRepository.findByAccount(reqUser.getAccount());
 
