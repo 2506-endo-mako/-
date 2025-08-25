@@ -7,6 +7,7 @@ import com.example.spring_boot.controller.form.UserForm;
 import com.example.spring_boot.dto.UserDetailDto;
 import com.example.spring_boot.repository.UserRepository;
 import com.example.spring_boot.repository.entity.User;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,8 @@ public class UserService {
     UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    HttpSession session;
 
     /*
      * ユーザーのレコード全件取得処理
@@ -151,18 +154,20 @@ public class UserService {
             // 3. 取得したレコードのIDが、更新対象のIDと一致するかどうかを比較する
             //    IDが一致する場合、それは自分自身のレコードなので重複ではない
             if (existingUser.getId() != (reqUser.getId())) {
+                List<String> errorMessages = new ArrayList<>();
                 // IDが一致しない場合、別のアカウントが同じアカウント名を持っているため重複エラー
                 throw new Exception("アカウントが重複しています");
             }
             User loginSaveUsers = new User();
             loginSaveUsers = (userRepository.findById(reqUser.getId()).orElse(null));
-            User saveUsers = setLoginUserEditEntity(reqUser,loginSaveUsers);
+            User saveUsers = setLoginUserEditEntity(reqUser, loginSaveUsers);
             userRepository.save(saveUsers);
         }
-//        User loginSaveUsers = new User();
-//        loginSaveUsers = (userRepository.findById(reqUser.getId()).orElse(null));
-//        User saveUsers = setLoginUserEditEntity(reqUser,loginSaveUsers);
-//        userRepository.save(saveUsers);
+
+        User loginSaveUsers2 = new User();
+        loginSaveUsers2 = (userRepository.findById(reqUser.getId()).orElse(null));
+        User saveUsers = setLoginUserEditEntity(reqUser,loginSaveUsers2);
+        userRepository.save(saveUsers);
     }
 
 

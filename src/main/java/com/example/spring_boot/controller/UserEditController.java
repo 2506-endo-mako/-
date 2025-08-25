@@ -79,10 +79,17 @@ public class UserEditController {
         User loginUser = (User) session.getAttribute("loginUser");
         Integer loginUserId = loginUser.getId();
 
-        // ログインユーザーと編集対象ユーザーが同じ場合loginUserEditメソッドへ飛ぶ
-        if (loginUserId.equals(id)) {
-            userService.loginUserEdit(userEditForm);
+        try{
+            // ログインユーザーと編集対象ユーザーが同じ場合loginUserEditメソッドへ飛ぶ
+            if (loginUserId.equals(id)) {
+                userService.loginUserEdit(userEditForm);
+            }
+        } catch (Exception e) {
+            // Serviceから重複エラーがスローされた場合
+            session.setAttribute("errorMessages", e.getMessage());
+            return new ModelAndView("redirect:/userEdit/{id}");
         }
+
 
         List<String> errorMessages = new ArrayList<>();
         //パスワードと確認パスワードが違う場合
@@ -96,28 +103,35 @@ public class UserEditController {
         // 更新後のユーザー情報をDBから再取得
         if (loginUserId.equals(id)) {
             UserEditForm updatedUser = userService.editUser(userEditForm.getId());
-
-        // 他のフィールドも同様にセット
-        //支社と部署の組み合わせが不正の時
-        if((updatedUser.getBranchId() == 1 && updatedUser.getDepartmentId() == 3)
-//                || (newForm.getBranchId() == 1 && newForm.getDepartmentId() == 4)
-//                || (newForm.getBranchId() == 1 && newForm.getDepartmentId() == 5)
-//                || (newForm.getBranchId() == 2 && newForm.getDepartmentId() == 1)
-//                || (newForm.getBranchId() == 2 && newForm.getDepartmentId() == 2)
-//                || (newForm.getBranchId() == 3 && newForm.getDepartmentId() == 1)
-//                || (newForm.getBranchId() == 3 && newForm.getDepartmentId() == 2)
-//                || (newForm.getBranchId() == 4 && newForm.getDepartmentId() == 1)
-//                || (newForm.getBranchId() == 4 && newForm.getDepartmentId() == 2)
-//                || (newForm.getBranchId() == 5 && newForm.getDepartmentId() == 1)
-//                || (newForm.getBranchId() == 5 && newForm.getDepartmentId() == 2)
-                                                                                    ) {
-            errorMessages.add("支社と部署の組み合わせが不正です");
-        } else {
-            if((updatedUser.getBranchId() == 1 && updatedUser.getDepartmentId() == 3)) {
+            //支社と部署の組み合わせが不正の時
+            if ((updatedUser.getBranchId() == 1 && updatedUser.getDepartmentId() == 3)
+                    || (updatedUser.getBranchId() == 1 && updatedUser.getDepartmentId() == 4)
+                    || (updatedUser.getBranchId() == 1 && updatedUser.getDepartmentId() == 5)
+                    || (updatedUser.getBranchId() == 2 && updatedUser.getDepartmentId() == 1)
+                    || (updatedUser.getBranchId() == 2 && updatedUser.getDepartmentId() == 2)
+                    || (updatedUser.getBranchId() == 3 && updatedUser.getDepartmentId() == 1)
+                    || (updatedUser.getBranchId() == 3 && updatedUser.getDepartmentId() == 2)
+                    || (updatedUser.getBranchId() == 4 && updatedUser.getDepartmentId() == 1)
+                    || (updatedUser.getBranchId() == 4 && updatedUser.getDepartmentId() == 2)
+                    || (updatedUser.getBranchId() == 5 && updatedUser.getDepartmentId() == 1)
+                    || (updatedUser.getBranchId() == 5 && updatedUser.getDepartmentId() == 2)) {
+                errorMessages.add("支社と部署の組み合わせが不正です");
+            }
+        }else {
+            if((userEditForm.getBranchId() == 1 && userEditForm.getDepartmentId() == 3)
+                    || (userEditForm.getBranchId() == 1 && userEditForm.getDepartmentId() == 4)
+                    || (userEditForm.getBranchId() == 1 && userEditForm.getDepartmentId() == 5)
+                    || (userEditForm.getBranchId() == 2 && userEditForm.getDepartmentId() == 1)
+                    || (userEditForm.getBranchId() == 2 && userEditForm.getDepartmentId() == 2)
+                    || (userEditForm.getBranchId() == 3 && userEditForm.getDepartmentId() == 1)
+                    || (userEditForm.getBranchId() == 3 && userEditForm.getDepartmentId() == 2)
+                    || (userEditForm.getBranchId() == 4 && userEditForm.getDepartmentId() == 1)
+                    || (userEditForm.getBranchId() == 4 && userEditForm.getDepartmentId() == 2)
+                    || (userEditForm.getBranchId() == 5 && userEditForm.getDepartmentId() == 1)
+                    || (userEditForm.getBranchId() == 5 && userEditForm.getDepartmentId() == 2)) {
                 errorMessages.add("支社と部署の組み合わせが不正です");
             }
         }
-
 
             // 他のバリデーションエラーが存在するかチェック
             if (result.hasErrors()) {
@@ -128,8 +142,8 @@ public class UserEditController {
                 session.setAttribute("errorMessages", errorMessages);
                 return new ModelAndView("redirect:/userEdit/{id}");
             }
-        }
-        if(!(errorMessages.isEmpty())){
+
+        if(!errorMessages.isEmpty()) {
             session.setAttribute("errorMessages",errorMessages);
             return new ModelAndView("redirect:/userEdit/{id}");
         }
