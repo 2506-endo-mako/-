@@ -119,7 +119,12 @@ public class UserService {
     /*
      * 更新したusersテーブルのレコード追加(ユーザー編集の時使用)
      */
-    public void editUpdateUser(UserEditForm reqUser) throws Exception {
+    public void editUpdateUser(UserEditForm reqUser, String rawPassword) throws Exception {
+        // setUserEditEntityを呼び出して、パスワード以外の情報を設定したUserオブジェクトを取得
+        User user = setUserEditEntity(reqUser);
+        // パスワードのハッシュ化
+        String hashedPassword = passwordEncoder.encode(rawPassword);
+        user.setPassword(hashedPassword);
         // 1. フォームから送られてきたアカウント名で、既存のレコードを検索する
         Optional<User> existingUserOptional = userRepository.findByAccount(reqUser.getAccount());
 
@@ -133,11 +138,9 @@ public class UserService {
                 // IDが一致しない場合、別のアカウントが同じアカウント名を持っているため重複エラー
                 throw new Exception("アカウントが重複しています");
             }
-            User saveUsers = setUserEditEntity(reqUser);
-            userRepository.save(saveUsers);
+            userRepository.save(user);
         }
-        User saveUsers = setUserEditEntity(reqUser);
-        userRepository.save(saveUsers);
+        userRepository.save(user);
     }
 
     /*

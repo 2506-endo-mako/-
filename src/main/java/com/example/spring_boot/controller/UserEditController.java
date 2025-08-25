@@ -155,7 +155,7 @@ public class UserEditController {
             // Serviceの更新メソッドを呼び出す
             // 更新後のユーザー情報をDBから再取得
             // updatedUser2 = userService.editUser(userEditForm.getId());
-            userService.editUpdateUser(userEditForm);
+            userService.editUpdateUser(userEditForm, userEditForm.getPassword());
             } catch (Exception e) {
                 // Serviceから重複エラーがスローされた場合
                 session.setAttribute("errorMessages", e.getMessage());
