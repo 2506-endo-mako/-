@@ -42,8 +42,75 @@ button {
 	background-color: white;
 }
 
-.tasks{
-    background-color: white;
+/* 各セルに境界線を適用 */
+table.tasks th,
+table.tasks td {
+    border: 1px solid black;
+    padding: 8px; /* セル内の余白を追加して見やすくする */
+}
+
+/* テーブル全体のスタイル */
+table.tasks {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+}
+
+/* ヘッダーのスタイル */
+table.tasks th {
+    background-color: #8B4513;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+/* ボディのセルのスタイル */
+table.tasks td {
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+th.account {
+    width: 20%;
+}
+
+th.name {
+    width: 20%;
+}
+
+th.branchName {
+    width: 15%;
+}
+
+th.departmentName {
+    width: 15%;
+}
+
+th.isStopped {
+    width: 15%;
+    text-align: center;
+}
+
+td.branchName {
+    width: 15%;
+    text-align: center;
+}
+
+td.departmentName {
+    width: 15%;
+    text-align: center;
+}
+
+td.isStopped {
+    width: 15%;
+    text-align: center;
+}
+
+td.user-edit-button {
+    width: 15%;
+    text-align: center;
 }
 
 label {
@@ -64,7 +131,3 @@ label {
 .limit-after{
     background-color: #FFFF99;
 }
-
-.td, th {
- padding: 10px 10px 10px 10px;
- }

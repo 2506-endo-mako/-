@@ -67,17 +67,15 @@ public class UserService {
             userEditForm.setName(result.getName());
             userEditForm.setBranchId(result.getBranchId());
             userEditForm.setDepartmentId(result.getDepartmentId());
-
-            //userForm.setBranchName(result.getBranchName());
-            //userForm.setDepartmentName(result.getDepartmentName());
-
             userEditForm.setIsStopped(result.getIsStopped());
             users.add(userEditForm);
         }
         return users;
     }
 
-    // ユーザー登録メソッド
+    /*
+     * ユーザー登録
+     */
     public User registerUser(SignUpForm reqUser, String rawPassword) {
         // まずsetUserEditEntityを呼び出して、パスワード以外の情報を設定したUserオブジェクトを取得
         User user = setSignUpEntity(reqUser);
@@ -88,7 +86,9 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    // ログイン処理に使用するメソッド
+    /*
+     * ログイン処理
+     */
     public Optional<User> authenticateUser(String account, String rawPassword) {
         // 1. アカウント名でユーザーを検索
         Optional<User> userOptional = userRepository.findByAccount(account);
@@ -324,8 +324,6 @@ public class UserService {
         user.setBranchId(saveUser.getBranchId());
         user.setDepartmentId(saveUser.getDepartmentId());
         user.setIsStopped(saveUser.getIsStopped());
-        //user.setName(saveBranch.getName());
-        //user.setName(saveDepartment.getName());
         return user;
     }
 }

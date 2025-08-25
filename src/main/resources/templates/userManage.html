@@ -16,72 +16,83 @@
     <a href="/signUp">
         <button class="signUp-button" type="button">新規ユーザー登録</button>
     </a>
-    <div class="main-contents">
-        <div method="post" action="/manage">
-            <div class="form-area" th:each="userData : ${userData}">
-                <div class="account">
-                    アカウント : <span th:text="${userData.account}"/>
-                </div>
-                <div class="name">
-                    名前 : <span th:text="${userData.name}"/>
-                </div>
-                <div class="branchName">
-                    支店名 : <span th:text="${userData.branchName}"/>
-                </div>
-                <div class="departmentName">
-                    部署名 : <span th:text="${userData.departmentName}"/>
-                </div>
-                <form th:if="${userData.id} != ${loginUser.id}"
-                      th:action="@{/updateStatus/{id}(id=${userData.id})}" th:method="put">
-                    <div class="isStopped">
-                        稼働状態 : <select name="status">
-                        <option value="0" th:selected="${userData.isStopped == 0}"> 稼働</option>
-                        <option value="1" th:selected="${userData.isStopped == 1}"> 停止</option>
-                    </select>
-                        <input class=confirm-action-btn type="submit" value="更新"/>
-                    </div>
-                </form>
-                <div th:if="${userData.id} == ${loginUser.id}">
-                    稼働状態 : <span th:text="${(userData.isStopped ?: 0) == 0 ? '稼働' : '停止'}"></span>
-                </div>
+    <form th:method="post" action="/manage">
+        <div class="main-contents">
+            <table class="tasks">
+                <tr class="title">
+                    <th class="account">アカウント</th>
+                    <th class="name">名前</th>
+                    <th class="branchName">支店名</th>
+                    <th class="departmentName">部署名</th>
+                    <th class="isStopped">稼働状態</th>
+                </tr>
 
-                <!--編集ボタン-->
-                <div class="edit-button">
-                    <form th:action="@{/userEdit/{id}(id=${userData.id})}">
-                        <input type="submit" value="編集"/>
-                    </form>
-                </div>
-            </div>
+                <tr class="form-area" th:each="userData : ${userData}">
+                    <td class="account">
+                        <span th:text="${userData.account}"/>
+                    </td>
+                    <td class="name">
+                        <span th:text="${userData.name}"/>
+                    </td>
+                    <td class="branchName">
+                        <span th:text="${userData.branchName}"/>
+                    </td>
+                    <td class="departmentName">
+                        <span th:text="${userData.departmentName}"/>
+                    </td>
+                    <td class="isStopped">
+                        <form th:if="${userData.id} != ${loginUser.id}"
+                              th:action="@{/updateStatus/{id}(id=${userData.id})}" th:method="put">
+                            <select name="status">
+                            <option value="0" th:selected="${userData.isStopped == 0}"> 稼働</option>
+                            <option value="1" th:selected="${userData.isStopped == 1}"> 停止</option>
+                        </select>
+                            <input class=confirm-action-btn type="submit" value="更新"/>
+                        </form>
+                        <div th:if="${userData.id} == ${loginUser.id}">
+                            <span th:text="${(userData.isStopped ?: 0) == 0 ? '稼働' : '停止'}"></span>
+                        </div>
+                    </td>
+
+                    <!--編集ボタン-->
+                    <td class="user-edit-button">
+                        <form th:action="@{/userEdit/{id}(id=${userData.id})}">
+                            <input type="submit" value="編集"/>
+                        </form>
+                    </td>
+                </tr>
+
+            </table>
         </div>
-    </div>
-</div>
-<script>
-    //★更新ボタンへのダイアログ機能
-    // 'confirm-action-btn' クラスを持つすべての要素を取得
-    const confirmButtons = document.querySelectorAll('.confirm-action-btn');
 
-    //取得した各ボタンに対してループ処理を行う
-    confirmButtons.forEach(button => {
-        button.addEventListener("click", function(event) {
-            // data-message 属性から確認メッセージを取得
-            const message = this.dataset.message || "ステータスを更新してもよろしいですか？"; // デフォルトメッセージも設定
-
-            var result = window.confirm(message);
-                if( result ) {
-                    alert("OKがクリックされました");
-                // もしフォーム送信やリンク遷移を続行させたい場合は、ここで event.preventDefault() を書かない
-                // または、alert("OKがクリックされました"); 以外の処理を行う
-                } else {
-                    event.preventDefault(); // デフォルトの動作をキャンセル
-                    alert("キャンセルがクリックされました");
-                }
-        });
-    });
-</script>
-<div class="footer-contents">
-    <form action="/top">
-        <input type="submit" value="戻る"/>
     </form>
-</div>
+    <script>
+        //★更新ボタンへのダイアログ機能
+        // 'confirm-action-btn' クラスを持つすべての要素を取得
+        const confirmButtons = document.querySelectorAll('.confirm-action-btn');
+
+        //取得した各ボタンに対してループ処理を行う
+        confirmButtons.forEach(button => {
+            button.addEventListener("click", function(event) {
+                // data-message 属性から確認メッセージを取得
+                const message = this.dataset.message || "ステータスを更新してもよろしいですか？"; // デフォルトメッセージも設定
+
+                var result = window.confirm(message);
+                    if( result ) {
+                        alert("OKがクリックされました");
+                    // もしフォーム送信やリンク遷移を続行させたい場合は、ここで event.preventDefault() を書かない
+                    // または、alert("OKがクリックされました"); 以外の処理を行う
+                    } else {
+                        event.preventDefault(); // デフォルトの動作をキャンセル
+                        alert("キャンセルがクリックされました");
+                    }
+            });
+        });
+    </script>
+    <div class="footer-contents">
+        <form action="/top">
+            <input type="submit" value="戻る"/>
+        </form>
+    </div>
 </body>
 </html>
