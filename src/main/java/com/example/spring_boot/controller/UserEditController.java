@@ -2,14 +2,19 @@ package com.example.spring_boot.controller;
 
 import com.example.spring_boot.controller.form.UserEditForm;
 import com.example.spring_boot.controller.form.UserForm;
+import com.example.spring_boot.repository.entity.LoginUserEdit;
 import com.example.spring_boot.repository.entity.User;
 import com.example.spring_boot.service.UserService;
+import com.example.spring_boot.validation.validation.group.OtherUserValidation;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -25,6 +30,8 @@ public class UserEditController {
     UserService userService;
     @Autowired
     HttpSession session;
+    @Autowired
+    private LocalValidatorFactoryBean validator;
 
     /*
      *ユーザー編集画面表示
@@ -68,17 +75,15 @@ public class UserEditController {
     public ModelAndView userEditUpdateContent(@PathVariable Integer id,
                                               @Validated @ModelAttribute("formModel") UserEditForm userEditForm,
                                               BindingResult result) throws Exception {
-        //バリデーション
-        if (result.hasErrors()) {
-            List<String> errorMessages = new ArrayList<>();
-            for (ObjectError error : result.getAllErrors()) {
-                // ここでメッセージを取得する。
-                errorMessages.add(error.getDefaultMessage());
-            }
-                session.setAttribute("errorMessages", errorMessages);
-                return new ModelAndView("redirect:/userEdit/{id}");
+        // ログインユーザーのIDを取得（セッションから取得する想定）
+        User loginUser = (User) session.getAttribute("loginUser");
+        Integer loginUserId = loginUser.getId();
 
+        // ログインユーザーと編集対象ユーザーが同じ場合loginUserEditメソッドへ飛ぶ
+        if (loginUserId.equals(id)) {
+            userService.loginUserEdit(userEditForm);
         }
+
         List<String> errorMessages = new ArrayList<>();
         //パスワードと確認パスワードが違う場合
         String password = userEditForm.getPassword();
@@ -88,27 +93,54 @@ public class UserEditController {
             //session.setAttribute("errorMessages", "パスワードと確認用パスワードが一致しません");
             //return new ModelAndView("redirect:/userEdit/{id}");
         }
+        // 更新後のユーザー情報をDBから再取得
+        if (loginUserId.equals(id)) {
+            UserEditForm updatedUser = userService.editUser(userEditForm.getId());
+
+        // 他のフィールドも同様にセット
         //支社と部署の組み合わせが不正の時
-        if((userEditForm.getBranchId() == 1 && userEditForm.getDepartmentId() == 3)
-                || (userEditForm.getBranchId() == 1 && userEditForm.getDepartmentId() == 4)
-                || (userEditForm.getBranchId() == 1 && userEditForm.getDepartmentId() == 5)
-                || (userEditForm.getBranchId() == 2 && userEditForm.getDepartmentId() == 1)
-                || (userEditForm.getBranchId() == 2 && userEditForm.getDepartmentId() == 2)
-                || (userEditForm.getBranchId() == 3 && userEditForm.getDepartmentId() == 1)
-                || (userEditForm.getBranchId() == 3 && userEditForm.getDepartmentId() == 2)
-                || (userEditForm.getBranchId() == 4 && userEditForm.getDepartmentId() == 1)
-                || (userEditForm.getBranchId() == 4 && userEditForm.getDepartmentId() == 2)
-                || (userEditForm.getBranchId() == 5 && userEditForm.getDepartmentId() == 1)
-                || (userEditForm.getBranchId() == 5 && userEditForm.getDepartmentId() == 2)) {
-                    errorMessages.add("支社と部署の組み合わせが不正です");
+        if((updatedUser.getBranchId() == 1 && updatedUser.getDepartmentId() == 3)
+//                || (newForm.getBranchId() == 1 && newForm.getDepartmentId() == 4)
+//                || (newForm.getBranchId() == 1 && newForm.getDepartmentId() == 5)
+//                || (newForm.getBranchId() == 2 && newForm.getDepartmentId() == 1)
+//                || (newForm.getBranchId() == 2 && newForm.getDepartmentId() == 2)
+//                || (newForm.getBranchId() == 3 && newForm.getDepartmentId() == 1)
+//                || (newForm.getBranchId() == 3 && newForm.getDepartmentId() == 2)
+//                || (newForm.getBranchId() == 4 && newForm.getDepartmentId() == 1)
+//                || (newForm.getBranchId() == 4 && newForm.getDepartmentId() == 2)
+//                || (newForm.getBranchId() == 5 && newForm.getDepartmentId() == 1)
+//                || (newForm.getBranchId() == 5 && newForm.getDepartmentId() == 2)
+                                                                                    ) {
+            errorMessages.add("支社と部署の組み合わせが不正です");
+        } else {
+            if((updatedUser.getBranchId() == 1 && updatedUser.getDepartmentId() == 3)) {
+                errorMessages.add("支社と部署の組み合わせが不正です");
+            }
+        }
+
+
+            // 他のバリデーションエラーが存在するかチェック
+            if (result.hasErrors()) {
+                //List<String> errorMessages = new ArrayList<>();
+                for (ObjectError error : result.getAllErrors()) {
+                    errorMessages.add(error.getDefaultMessage());
+                }
+                session.setAttribute("errorMessages", errorMessages);
+                return new ModelAndView("redirect:/userEdit/{id}");
+            }
         }
         if(!(errorMessages.isEmpty())){
             session.setAttribute("errorMessages",errorMessages);
             return new ModelAndView("redirect:/userEdit/{id}");
         }
+        if (loginUserId.equals(id)){
+            return new ModelAndView("redirect:/userManage");
+        }
         //アカウント重複チェック
         try {
             // Serviceの更新メソッドを呼び出す
+            // 更新後のユーザー情報をDBから再取得
+            // updatedUser2 = userService.editUser(userEditForm.getId());
             userService.editUpdateUser(userEditForm);
             } catch (Exception e) {
                 // Serviceから重複エラーがスローされた場合

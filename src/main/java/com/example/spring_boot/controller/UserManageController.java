@@ -3,6 +3,7 @@ package com.example.spring_boot.controller;
 import com.example.spring_boot.controller.form.UserEditForm;
 import com.example.spring_boot.controller.form.UserForm;
 //import com.example.spring_boot.dto.UserWithDetailsDto;
+import com.example.spring_boot.dto.UserDetailDto;
 import com.example.spring_boot.repository.UserRepository;
 import com.example.spring_boot.repository.entity.User;
 import com.example.spring_boot.service.UserService;
@@ -25,8 +26,6 @@ public class UserManageController {
     UserService userService;
     @Autowired
     HttpSession session;
-    @Autowired
-    UserRepository userRepository;
 
     /*
      * ユーザー管理画面表示処理
@@ -37,7 +36,7 @@ public class UserManageController {
         //セッションから取得
         User loginUser = (User) session.getAttribute("loginUser");
         // ユーザー情報を全件取得
-        List<UserEditForm> userData = userService.findAllUser();
+        List<UserDetailDto> userData = userService.findAllUser();
         // form用の空のentityを準備
         UserEditForm userEditForm = new UserEditForm();
         // 画面遷移先を指定
@@ -47,11 +46,6 @@ public class UserManageController {
         mav.addObject("formModel", userEditForm);
         mav.addObject("loginUser",loginUser);
         mav.addObject("errorMessages", session.getAttribute("errorMessages"));
-
-//        // リポジトリから結合されたデータを取得
-//        List<UserWithDetailsDto> users = userRepository.findAllUsersWithDetails();
-//        // データをビューに渡す
-//        mav.addObject("users", users);
 
         session.removeAttribute("errorMessages");
         return mav;

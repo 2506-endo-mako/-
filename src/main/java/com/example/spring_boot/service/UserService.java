@@ -1,8 +1,10 @@
 package com.example.spring_boot.service;
 
+import com.example.spring_boot.controller.form.LoginUserEditForm;
 import com.example.spring_boot.controller.form.SignUpForm;
 import com.example.spring_boot.controller.form.UserEditForm;
 import com.example.spring_boot.controller.form.UserForm;
+import com.example.spring_boot.dto.UserDetailDto;
 import com.example.spring_boot.repository.UserRepository;
 import com.example.spring_boot.repository.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +30,9 @@ public class UserService {
     /*
      * ユーザーのレコード全件取得処理
      */
-    public List<UserEditForm> findAllUser() {
-        List<User> results = userRepository.findAll();
-        List<UserEditForm> users = setAllUser(results);
+    public List<UserDetailDto> findAllUser() {
+        List<UserDetailDto> users = userRepository.findAllUserDetails();
+        // DTOのリストを直接返す
         return users;
     }
 
@@ -41,7 +43,7 @@ public class UserService {
         List<User> results = new ArrayList<>();
         results.add((User) userRepository.findById(id).orElse(null));
         List<UserEditForm> users = setAllUser(results);
-        if(users == null){
+        if (users == null) {
             return null;
         }
         return users.get(0);
@@ -55,7 +57,7 @@ public class UserService {
         for (int i = 0; i < results.size(); i++) {
             UserEditForm userEditForm = new UserEditForm();
             User result = results.get(i);
-            if(result == null){
+            if (result == null) {
                 return null;
             }
             userEditForm.setId(result.getId());
@@ -112,43 +114,6 @@ public class UserService {
     }
 
     /*
-     * リクエストから取得した情報をEntityに設定
-     */
-//    private User setUserEntity(UserForm reqUser) {
-//        //現在日時を取得
-//        Date date = new Date();
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-//
-//        //変数endにsdfからformatメソッドで引数dateを渡したものを代入して
-//        //現在日時をendDateに入れている
-//        String strDate = sdf.format(date);
-//        Date nowDate;
-//        try {
-//            nowDate = sdf.parse(strDate);
-//        } catch (ParseException e) {
-//            //例外が発生した場所や原因をより詳細に把握できる
-//            e.printStackTrace();
-//            return null;
-//        }
-//
-//        User user = new User();
-//        user.setId(reqUser.getId());
-//        user.setAccount(reqUser.getAccount());
-//        user.setPassword(reqUser.getPassword());
-//        user.setName(reqUser.getName());
-//        user.setBranchId(reqUser.getBranchId());
-//        user.setDepartmentId(reqUser.getDepartmentId());
-//        if(reqUser.getIsStopped() == null) {
-//            user.setIsStopped(0);
-//        } else {
-//            user.setIsStopped(reqUser.getIsStopped());
-//        }
-//        user.setCreatedDate(nowDate);
-//        user.setUpdatedDate(nowDate);
-//        return user;
-//    }
-
-    /*
      * 更新したusersテーブルのレコード追加(ユーザー編集の時使用)
      */
     public void editUpdateUser(UserEditForm reqUser) throws Exception {
@@ -165,11 +130,42 @@ public class UserService {
                 // IDが一致しない場合、別のアカウントが同じアカウント名を持っているため重複エラー
                 throw new Exception("アカウントが重複しています");
             }
-        }
             User saveUsers = setUserEditEntity(reqUser);
             userRepository.save(saveUsers);
-
+        }
+        User saveUsers = setUserEditEntity(reqUser);
+        userRepository.save(saveUsers);
     }
+
+    /*
+     * 更新したusersテーブルのレコード追加(ログインした人のユーザー編集の時使用)
+     */
+    public void loginUserEdit(UserEditForm reqUser) throws Exception {
+        // 1. フォームから送られてきたアカウント名で、既存のレコードを検索する
+        Optional<User> existingUserOptional = userRepository.findByAccount(reqUser.getAccount());
+
+        // 2. 検索結果が存在する場合、重複チェックを行う
+        if (existingUserOptional.isPresent()) {
+            User existingUser = existingUserOptional.get();
+
+            // 3. 取得したレコードのIDが、更新対象のIDと一致するかどうかを比較する
+            //    IDが一致する場合、それは自分自身のレコードなので重複ではない
+            if (existingUser.getId() != (reqUser.getId())) {
+                // IDが一致しない場合、別のアカウントが同じアカウント名を持っているため重複エラー
+                throw new Exception("アカウントが重複しています");
+            }
+            User loginSaveUsers = new User();
+            loginSaveUsers = (userRepository.findById(reqUser.getId()).orElse(null));
+            User saveUsers = setLoginUserEditEntity(reqUser,loginSaveUsers);
+            userRepository.save(saveUsers);
+        }
+//        User loginSaveUsers = new User();
+//        loginSaveUsers = (userRepository.findById(reqUser.getId()).orElse(null));
+//        User saveUsers = setLoginUserEditEntity(reqUser,loginSaveUsers);
+//        userRepository.save(saveUsers);
+    }
+
+
 
     /*
      * 更新したusersテーブルのレコード追加（新規登録の時使用）
@@ -188,8 +184,8 @@ public class UserService {
                 // IDが一致しない場合、別のアカウントが同じアカウント名を持っているため重複エラー
                 throw new Exception("アカウントが重複しています");
             }
-        User saveUsers = setSignUpEntity(reqUser);
-        userRepository.save(saveUsers);
+            User saveUsers = setSignUpEntity(reqUser);
+            userRepository.save(saveUsers);
         }
     }
 
@@ -220,7 +216,7 @@ public class UserService {
         user.setName(reqUser.getName());
         user.setBranchId(reqUser.getBranchId());
         user.setDepartmentId(reqUser.getDepartmentId());
-        if(reqUser.getIsStopped() == null) {
+        if (reqUser.getIsStopped() == null) {
             user.setIsStopped(0);
         } else {
             user.setIsStopped(reqUser.getIsStopped());
@@ -258,8 +254,8 @@ public class UserService {
         user.setName(reqUser.getName());
         user.setBranchId(reqUser.getBranchId());
         user.setDepartmentId(reqUser.getDepartmentId());
-        if(reqUser.getIsStopped() == null) {
-         user.setIsStopped(0);
+        if (reqUser.getIsStopped() == null) {
+            user.setIsStopped(0);
         } else {
             user.setIsStopped(reqUser.getIsStopped());
         }
@@ -267,6 +263,45 @@ public class UserService {
         user.setUpdatedDate(nowDate);
         return user;
     }
+
+    /*
+     * リクエストから取得した情報をEntityに設定
+     */
+    private User setLoginUserEditEntity(UserEditForm reqUser,User loginSaveUsers) {
+        //現在日時を取得
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
+        //変数endにsdfからformatメソッドで引数dateを渡したものを代入して
+        //現在日時をendDateに入れている
+        String strDate = sdf.format(date);
+        Date nowDate;
+        try {
+            nowDate = sdf.parse(strDate);
+        } catch (ParseException e) {
+            //例外が発生した場所や原因をより詳細に把握できる
+            e.printStackTrace();
+            return null;
+        }
+
+        User user = new User();
+        user.setId(reqUser.getId());
+        user.setAccount(reqUser.getAccount());
+        user.setPassword(reqUser.getPassword());
+        user.setName(reqUser.getName());
+        user.setBranchId(loginSaveUsers.getBranchId());
+        user.setDepartmentId(loginSaveUsers.getDepartmentId());
+        if (reqUser.getIsStopped() == null) {
+            user.setIsStopped(0);
+        } else {
+            user.setIsStopped(reqUser.getIsStopped());
+        }
+        user.setCreatedDate(nowDate);
+        user.setUpdatedDate(nowDate);
+        return user;
+    }
+
+
 
     /*
      * ユーザ稼働状態（ステータス）更新
@@ -278,7 +313,7 @@ public class UserService {
     /*
      * リクエストから取得した情報をEntityに設定
      */
-    private User updateSetUserEntity(UserForm reqUser,User saveUser) {
+    private User updateSetUserEntity(UserForm reqUser, User saveUser) {
 
         User user = new User();
 

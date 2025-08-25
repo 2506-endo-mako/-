@@ -1,5 +1,6 @@
 package com.example.spring_boot.controller.form;
 
+import com.example.spring_boot.validation.validation.group.OtherUserValidation;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
@@ -18,7 +19,7 @@ public class UserEditForm {
 
     @Id
     @Column
-    private int id;
+    private Integer id;
 
     @Column
     @NotBlank(message = "アカウントを入力してください")
@@ -38,11 +39,11 @@ public class UserEditForm {
     @Column
     private String name;
 
-    @NotNull(message = "支社を選択してください")
+    @NotNull(message = "支社を選択してください", groups = OtherUserValidation.class)
     @Column(name = "branch_id", insertable = true, updatable = true)
     private Integer branchId;
 
-    @NotNull(message = "部署を選択してください")
+    @NotNull(message = "部署を選択してください",groups = OtherUserValidation.class)
     @Column(name = "department_id", insertable = true, updatable = true)
     private Integer departmentId;
 

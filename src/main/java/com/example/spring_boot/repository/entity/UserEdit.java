@@ -20,13 +20,9 @@ import java.util.List;
 
 public class UserEdit {
     @Id
-    @Column(name = "id", insertable = true, updatable = false)
+    @Column(name = "id", insertable = true, updatable = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-//    @ManyToOne
-//    @JoinColumn(name="message_id")
-//    private Message messages;
 
     @Column(name = "account")
     private String account;
@@ -37,10 +33,10 @@ public class UserEdit {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "branch_id", insertable = true, updatable = true)
+    @Column(name = "branch_id")
     private Integer branchId;
 
-    @Column(name = "department_id", insertable = true, updatable = true)
+    @Column(name = "department_id")
     private Integer departmentId;
 
     @Column(name = "is_stopped")
@@ -52,7 +48,4 @@ public class UserEdit {
     @Column(name = "updated_date", insertable = false, updatable = true)
     private Date updatedDate;
 
-//    @OneToMany(mappedBy="user", cascade=CascadeType.ALL)
-//    private List<Branch> branches;
-//    private List<Department> departments;
 }
