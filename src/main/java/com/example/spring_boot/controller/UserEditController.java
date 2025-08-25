@@ -82,7 +82,7 @@ public class UserEditController {
         try{
             // ログインユーザーと編集対象ユーザーが同じ場合loginUserEditメソッドへ飛ぶ
             if (loginUserId.equals(id)) {
-                userService.loginUserEdit(userEditForm, userEditForm.getPassword());
+                userService.loginUserEdit(userEditForm,userEditForm.getPassword());
             }
         } catch (Exception e) {
             // Serviceから重複エラーがスローされた場合
